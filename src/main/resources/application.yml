@@ -1,0 +1,9 @@
+spring:
+  stomp:
+    broker:
+      relay-host: 43.201.110.3
+      relay-port: 61613
+      system-username: atm
+      system-password: soma14atm@!
+      client-username: atm
+      client-password: soma14atm@!
