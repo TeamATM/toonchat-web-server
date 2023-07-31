@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+    push:
+      branches:
+        - main
+        - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v1.4.4
+        with:
+          java-version: 17
+          distribution: 'corretto'
+          java-package: 'jdk'
+
+      - name: Cache Gradle modules
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle-
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+        shell: bash
+
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      - name: Test with Gradle
+        run: ./gradlew test
