@@ -1,0 +1,22 @@
+#!/bin/sh
+
+red='\033[0;31;1m'
+green='\033[0;32;1m'
+noColor='\033[0m'
+
+# for each module
+projectDir=$(git rev-parse --show-toplevel)
+
+# Checkstyle
+echo "-----------------Starting run checkstyle-----------------"
+checkstylePath="./build/reports/checkstyle/checkstyle.html"
+
+./gradlew checkstyle >/dev/null
+checkstyleStatus=$?
+if [ $checkstyleStatus -ne 0 ]
+then
+    echo "${red}Failed, project has checkstyle issues!${noColor}"
+    open ${projectDir}/${checkstylePath}
+    exit $checkstyleStatus
+fi
+echo "${green}Succeeded, no checkstyle issues found${noColor}\n\n"

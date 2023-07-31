@@ -1,0 +1,10 @@
+#!/bin/sh
+
+type_pattern='(Feat|🐝?Fix|🐛?Hot-Fix|Design|Docs|Style|Refactor|Test|Chore|Revert|Rename|Remove)((\(.+\))?!)?'
+pattern="^${type_pattern}: .+"
+
+commit_message=$(<"$1")
+if ! [[ $commit_message =~ $pattern ]]; then
+    echo 'commit message should follow "[optional emoji] <type>[optional scope]: <description>"'
+    exit 1
+fi
