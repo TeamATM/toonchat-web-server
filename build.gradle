@@ -35,6 +35,11 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
+checkstyle {
+    ignoreFailures = false ***REMOVED*** 분석결과 예외가 발생하면 빌드실패 발생시키는 것을 제외
+    configFile file("${project.rootDir}/.idea/check-style/naver-checkstyle-rules.xml")
+}
+
 tasks.register('checkstyle', Checkstyle) {
     description 'Check code convention'
     group 'verification'
