@@ -13,11 +13,6 @@
         <ConfigurationLocation id="bundled-google-checks" type="BUNDLED" scope="All" description="Google Checks">(bundled)</ConfigurationLocation>
         <ConfigurationLocation id="b984a2fe-cea8-4006-ad18-1a5f292dfb54" type="PROJECT_RELATIVE" scope="All" description="Naver Check">
           $PROJECT_DIR$/.idea/check-style/naver-checkstyle-rules.xml
-          <option name="properties">
-            <map>
-              <entry key="suppressionFile" value="naver-checkstyle-suppressions.xml" />
-            </map>
-          </option>
         </ConfigurationLocation>
       </list>
     </option>
