@@ -1,0 +1,8 @@
+spring:
+  stomp:
+    broker:
+      relay-host: ${RELAY_HOST}
+      system-username: ${SYSTEM_USERNAME}
+      system-password: ${SYSTEM_PASSWORD}
+      client-username: ${CLIENT_USERNAME}
+      client-password: ${CLIENT_PASSWORD}
