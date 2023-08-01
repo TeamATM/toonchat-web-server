@@ -21,7 +21,7 @@ public class StompConfig
 	implements WebSocketMessageBrokerConfigurer {
 	private final Environment environment;
 	private final StompInboundHandler stompInboundHandler;
-	***REMOVED*** private final StompOutboundHandler stompOutboundHandler;
+	// private final StompOutboundHandler stompOutboundHandler;
 
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
@@ -48,8 +48,8 @@ public class StompConfig
 		registration.interceptors(stompInboundHandler);
 	}
 
-	***REMOVED*** @Override
-	***REMOVED*** public void configureClientOutboundChannel(ChannelRegistration registration) {
-	***REMOVED*** 	registration.interceptors(stompOutboundHandler);
-	***REMOVED*** }
+	// @Override
+	// public void configureClientOutboundChannel(ChannelRegistration registration) {
+	// 	registration.interceptors(stompOutboundHandler);
+	// }
 }

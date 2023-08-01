@@ -19,7 +19,7 @@ public class WebSocketChatController {
 	@MessageMapping("/{id}")
 	public void sendMessage(@Payload StompMessageDto stompMessageDto, @DestinationVariable String id) {
 		String username = SessionUtils.getUserName();
-		***REMOVED*** TODO: id 통해서 캐릭터 이름 가져오기
+		// TODO: id 통해서 캐릭터 이름 가져오기
 		String characterName = id.equals("0") ? "이영준" : "김미소";
 
 		stompMessageDto.setReplyMessageId()
@@ -27,7 +27,7 @@ public class WebSocketChatController {
 			.setMessageTo(id)
 			.setStatus("STARTED")
 			.setCharacterName(characterName);
-		***REMOVED*** TODO: history 가져오기(자료형 바꿔도 OK)
+		// TODO: history 가져오기(자료형 바꿔도 OK)
 		String history = "";
 
 		messageTemplate.convertAndSend("/exchange/celery/celery",

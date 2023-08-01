@@ -16,7 +16,7 @@ public class StompInboundHandler implements ChannelInterceptor {
 	public Message<?> preSend(Message<?> message, MessageChannel channel) {
 		StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
 		if (StompCommand.SUBSCRIBE.equals(accessor.getCommand())) {
-			***REMOVED*** System.out.println("user = " + SessionUtils.getUserName());
+			// System.out.println("user = " + SessionUtils.getUserName());
 			/**
 			 * 유저 이름으로 Rabbitmq 라우팅 키 설정
 			 * TODO: Anonymous 유저는 어떻게?
