@@ -36,7 +36,6 @@ public class StompConfig
 		registry.setApplicationDestinationPrefixes("/chat");
 		registry.enableStompBrokerRelay("/topic", "/direct", "/exchange")
 			.setRelayHost(Objects.requireNonNull(environment.getProperty("spring.stomp.broker.relay-host")))
-			.setRelayPort(Objects.requireNonNull(environment.getProperty("spring.stomp.broker.relay-port", int.class)))
 			.setSystemLogin(Objects.requireNonNull(environment.getProperty("spring.stomp.broker.system-username")))
 			.setSystemPasscode(Objects.requireNonNull(environment.getProperty("spring.stomp.broker.system-password")))
 			.setClientLogin(Objects.requireNonNull(environment.getProperty("spring.stomp.broker.client-username")))
