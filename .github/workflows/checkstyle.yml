@@ -10,9 +10,16 @@ on:
         - main
         - develop
 
+env:
+  ECR_REPOSITORY: toonchat-web-server
+  AWS_REGION: ap-northeast-2
+
 jobs:
   build:
     runs-on: ubuntu-20.04
+    outputs:
+      PROJECT_NAME: ${{ steps.set-env.outputs.PROJECT_NAME }}
+      PROJECT_VERSION: ${{ steps.set-env.outputs.PROJECT_VERSION }}
 
     steps:
       - name: Checkout code
@@ -48,13 +55,62 @@ jobs:
         run: ./gradlew build
 
       - name: Set PROJECT_NAME and PROJECT_VERSION from Gradle
+        id: set-env
         run: |
-          echo "PROJECT_NAME=$(./gradlew properties | grep '^name:' | awk '{print $2}')" >> $GITHUB_ENV
-          echo "PROJECT_VERSION=$(./gradlew properties | grep '^version:' | awk '{print $2}')" >> $GITHUB_ENV
+          echo "PROJECT_NAME=$(./gradlew properties | grep '^name:' | awk '{print $2}')" >> "$GITHUB_OUTPUT"
+          echo "PROJECT_VERSION=$(./gradlew properties | grep '^version:' | awk '{print $2}')" >> "$GITHUB_OUTPUT"
         shell: bash
 
       - name: Archive artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
-          name: ${{ env.PROJECT_NAME }}-${{ env.PROJECT_VERSION }}
-          path: build/libs/${{ env.PROJECT_NAME }}-${{ env.PROJECT_VERSION }}.jar
+          name: ${{ steps.set-env.outputs.PROJECT_NAME }}-${{ steps.set-env.outputs.PROJECT_VERSION }}
+          path: |
+            build/libs/${{ steps.set-env.outputs.PROJECT_NAME }}-${{ steps.set-env.outputs.PROJECT_VERSION }}.jar
+            Dockerfile
+          retention-days: 1
+
+
+  release:
+    needs: build
+    if: contains(github.event.pull_request.labels.*.name, 'release')
+    runs-on: ubuntu-20.04
+    env:
+      PROJECT_NAME: ${{ needs.build.outputs.PROJECT_NAME }}
+      PROJECT_VERSION: ${{ needs.build.outputs.PROJECT_VERSION }}
+      DIR_NAME: ${{ needs.build.outputs.PROJECT_NAME }}-${{ needs.build.outputs.PROJECT_VERSION }}
+
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: test
+        working-directory: ${{ env.DIR_NAME }}
+        run: |
+          ls -al && cat Dockerfile
+
+      - name: Build and Push
+        id: build-push
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./${{ env.DIR_NAME }}/Dockerfile
+          push: true
+          tags: |
+            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest
+            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{env.PROJECT_VERSION}}
+          build-args: |
+            jarFile=${{ env.DIR_NAME }}/build/libs/${{ env.PROJECT_NAME }}-${{ env.PROJECT_VERSION }}.jar
