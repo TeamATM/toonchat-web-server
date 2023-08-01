@@ -12,7 +12,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
       - name: Checkout code
@@ -38,8 +38,23 @@ jobs:
         run: chmod +x ./gradlew
         shell: bash
 
-      - name: Build with Gradle
-        run: ./gradlew build
+      - name: Check style
+        run: ./gradlew checkstyle
 
       - name: Test with Gradle
         run: ./gradlew test
+
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      - name: Set PROJECT_NAME and PROJECT_VERSION from Gradle
+        run: |
+          echo "PROJECT_NAME=$(./gradlew properties | grep '^name:' | awk '{print $2}')" >> $GITHUB_ENV
+          echo "PROJECT_VERSION=$(./gradlew properties | grep '^version:' | awk '{print $2}')" >> $GITHUB_ENV
+        shell: bash
+
+      - name: Archive artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.PROJECT_NAME }}-${{ env.PROJECT_VERSION }}
+          path: build/libs/${{ env.PROJECT_NAME }}-${{ env.PROJECT_VERSION }}.jar
