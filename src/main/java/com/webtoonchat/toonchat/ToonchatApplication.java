@@ -9,5 +9,4 @@ public class ToonchatApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ToonchatApplication.class, args);
 	}
-
 }
