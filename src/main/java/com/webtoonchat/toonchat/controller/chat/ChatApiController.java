@@ -28,10 +28,10 @@ public class ChatApiController {
 	// 	return ResponseEntity.status(HttpStatus.CREATED)
 	// 		.body(savedArticle);
 	// }
-	@PostMapping("/api/chat/{characterId}/send")
+	@PostMapping("/api/chat/{characterId}")
 	public ResponseEntity<Chat> sendMessage(@PathVariable Long characterId, @RequestBody AddChatRequest request) {
-		System.out.println("message = " + request.toString());
-		System.out.println("character_id = " + characterId);
+		System.out.println("request.toString() = " + request.toString());
+		System.out.println("characterId = " + characterId);
 		// 현재 인증된 사용자 정보를 가져옴
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String currentUsername = authentication.getName();
