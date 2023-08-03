@@ -1,5 +1,6 @@
 package com.webtoonchat.toonchat.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -10,8 +11,10 @@ import org.springframework.stereotype.Controller;
 
 import com.webtoonchat.toonchat.SessionUtils;
 import com.webtoonchat.toonchat.domain.chat.Character;
+import com.webtoonchat.toonchat.domain.chat.Chat;
 import com.webtoonchat.toonchat.dto.StompMessageDto;
 import com.webtoonchat.toonchat.service.chat.CharacterService;
+import com.webtoonchat.toonchat.service.chat.ChatService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class WebSocketChatController {
 	private final SimpMessageSendingOperations messageTemplate;
 	private final CharacterService characterService;
+	private final ChatService chatService;
 	@MessageMapping("/{id}")
 	public void sendMessage(@Payload StompMessageDto stompMessageDto, @DestinationVariable String id) {
 		String username = SessionUtils.getUserName();
@@ -34,7 +38,8 @@ public class WebSocketChatController {
 			.setStatus("STARTED")
 			.setCharacterName(characterName);
 		// TODO: history 가져오기(자료형 바꿔도 OK)
-		String history = "";
+		//chatService.save(stompMessageDto);
+		List<Chat> history = chatService.getUserChatHistory(username);
 
 		messageTemplate.convertAndSend("/exchange/celery/celery",
 			stompMessageDto.toCeleryMessageDto("inference", history));

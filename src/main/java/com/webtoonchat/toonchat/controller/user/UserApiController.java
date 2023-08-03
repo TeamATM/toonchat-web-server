@@ -6,9 +6,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import com.atm.toonchat.dto.AddUserRequest;
-import com.atm.toonchat.service.UserDetailService;
-import com.atm.toonchat.service.UserService;
 import com.webtoonchat.toonchat.dto.user.AddUserRequest;
 import com.webtoonchat.toonchat.service.user.UserService;
 
