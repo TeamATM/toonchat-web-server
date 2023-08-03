@@ -6,7 +6,9 @@ import java.util.UUID;
 import com.webtoonchat.toonchat.domain.chat.StompMessageEntity;
 
 import lombok.Getter;
+import lombok.ToString;
 
+@ToString
 @Getter
 public class StompMessageDto {
 	private String messageId = UUID.randomUUID().toString();

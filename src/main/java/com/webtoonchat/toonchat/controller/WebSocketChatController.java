@@ -36,12 +36,15 @@ public class WebSocketChatController {
 		Optional<Character> character = characterService.getCharacterInfo(id);
 		String characterName = character.map(Character::getBotName).orElse("There is No bot to talk");
 		//String characterName = id.equals("0") ? "이영준" : "김미소";
-
 		stompMessageDto.setReplyMessageId()
 			.setMessageFrom(username)
 			.setMessageTo(id)
 			.setStatus("STARTED")
 			.setCharacterName(characterName);
+		stompMessageService.save(stompMessageDto);
+
+		System.out.println("stompMessageDto.toString() = " + stompMessageDto.toString());
+
 		// TODO: history 가져오기(자료형 바꿔도 OK)
 		List<StompMessageEntity> history = stompMessageService.getUserChatHistory(username);
 		ObjectMapper objectMapper = new ObjectMapper();
