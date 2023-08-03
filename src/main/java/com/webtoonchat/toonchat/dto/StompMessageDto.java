@@ -3,6 +3,8 @@ package com.webtoonchat.toonchat.dto;
 import java.util.Date;
 import java.util.UUID;
 
+import com.webtoonchat.toonchat.domain.chat.StompMessageEntity;
+
 import lombok.Getter;
 
 @Getter
@@ -67,5 +69,19 @@ public class StompMessageDto {
 		return CeleryMessageDto.build(replyMessageId, task)
 			.addArgs(new CeleryArgsDto(history, content, messageFrom, messageTo, characterName))
 			.addArgs(doStream);
+	}
+
+	public StompMessageEntity toEntity() {
+		StompMessageEntity entity = new StompMessageEntity();
+		entity.setMessageId(this.messageId);
+		entity.setReplyMessageId(this.replyMessageId);
+		entity.setStatus(this.status);
+		entity.setContent(this.content);
+		entity.setMessageFrom(this.messageFrom);
+		entity.setMessageTo(this.messageTo);
+		entity.setCharacterName(this.characterName);
+		entity.setCreatedAt(this.createdAt);
+		entity.setDoStream(this.doStream);
+		return entity;
 	}
 }

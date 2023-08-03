@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.webtoonchat.toonchat.domain.chat.Chat;
+import com.webtoonchat.toonchat.domain.chat.StompMessageEntity;
+import com.webtoonchat.toonchat.dto.StompMessageDto;
 import com.webtoonchat.toonchat.dto.chat.AddChatRequest;
 import com.webtoonchat.toonchat.repository.ChatRepository;
 
