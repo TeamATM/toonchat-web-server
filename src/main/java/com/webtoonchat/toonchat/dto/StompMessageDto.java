@@ -6,10 +6,12 @@ import java.util.UUID;
 import com.webtoonchat.toonchat.domain.chat.StompMessageEntity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @ToString
 @Getter
+@NoArgsConstructor
 public class StompMessageDto {
 	private String messageId = UUID.randomUUID().toString();
 	private String replyMessageId;
