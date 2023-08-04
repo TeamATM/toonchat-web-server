@@ -10,6 +10,6 @@ import com.webtoonchat.toonchat.domain.chat.Character;
 
 @Repository
 public interface CharacterRepository extends MongoRepository<Character, String> {
-	Optional<Character> findById(String id);
+	Optional<Character> findByCid(String id);
 
 }

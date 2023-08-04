@@ -27,20 +27,20 @@ import lombok.RequiredArgsConstructor;
 public class WebSocketChatController {
 	private final SimpMessageSendingOperations messageTemplate;
 	private final CharacterService characterService;
-	private final ChatService chatService;
 	private final StompMessageService stompMessageService;
 	@MessageMapping("/{id}")
 	public void sendMessage(@Payload StompMessageDto stompMessageDto, @DestinationVariable String id) {
 		String username = SessionUtils.getUserName();
-		// TODO: id 통해서 캐릭터 이름 가져오기
+		// TODO: cid 통해서 캐릭터 이름 가져오기
 		Optional<Character> character = characterService.getCharacterInfo(id);
 		String characterName = character.map(Character::getBotName).orElse("There is No bot to talk");
-		//String characterName = id.equals("0") ? "이영준" : "김미소";
+
 		stompMessageDto.setReplyMessageId()
 			.setMessageFrom(username)
 			.setMessageTo(id)
 			.setStatus("STARTED")
 			.setCharacterName(characterName);
+		// 채팅 저장
 		stompMessageService.save(stompMessageDto);
 
 		System.out.println("stompMessageDto.toString() = " + stompMessageDto.toString());
@@ -54,6 +54,7 @@ public class WebSocketChatController {
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
+		System.out.println("jsonHistory = " + jsonHistory);
 
 		messageTemplate.convertAndSend("/exchange/celery/celery",
 			stompMessageDto.toCeleryMessageDto("inference", jsonHistory));

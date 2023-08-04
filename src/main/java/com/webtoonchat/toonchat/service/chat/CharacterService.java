@@ -19,6 +19,6 @@ public class CharacterService {
 	private final CharacterRepository characterRepository;
 
 	public Optional<Character> getCharacterInfo(String id) {
-		return characterRepository.findById(id);
+		return characterRepository.findByCid(id);
 	}
 }

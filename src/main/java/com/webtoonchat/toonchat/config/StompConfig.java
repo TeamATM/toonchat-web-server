@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.messaging.converter.CompositeMessageConverter;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
@@ -11,6 +12,7 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
 import com.webtoonchat.toonchat.config.handler.StompInboundHandler;
+import com.webtoonchat.toonchat.config.handler.StompOutboundHandler;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,7 +23,7 @@ public class StompConfig
 	implements WebSocketMessageBrokerConfigurer {
 	private final Environment environment;
 	private final StompInboundHandler stompInboundHandler;
-	// private final StompOutboundHandler stompOutboundHandler;
+	private final StompOutboundHandler stompOutboundHandler;
 
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
@@ -47,8 +49,8 @@ public class StompConfig
 		registration.interceptors(stompInboundHandler);
 	}
 
-	// @Override
-	// public void configureClientOutboundChannel(ChannelRegistration registration) {
-	// 	registration.interceptors(stompOutboundHandler);
-	// }
+	@Override
+	public void configureClientOutboundChannel(ChannelRegistration registration) {
+		registration.interceptors(stompOutboundHandler);
+	}
 }
