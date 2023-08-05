@@ -47,17 +47,18 @@ public class WebSocketChatController {
 
 		// TODO: history 가져오기(자료형 바꿔도 OK)
 		List<StompMessageEntity> history = stompMessageService.getUserChatHistory(username);
-		ObjectMapper objectMapper = new ObjectMapper();
-		String jsonHistory = "";
-		try {
-			jsonHistory = objectMapper.writeValueAsString(history);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-		System.out.println("jsonHistory = " + jsonHistory);
-
+		// ObjectMapper objectMapper = new ObjectMapper();
+		// String jsonHistory = "";
+		// try {
+		// 	jsonHistory = objectMapper.writeValueAsString(history);
+		// } catch (JsonProcessingException e) {
+		// 	e.printStackTrace();
+		// }
+		//System.out.println("jsonHistory = " + jsonHistory);
+		System.out.print("-----------history---------");
+		history.forEach(s -> System.out.println(s.getContent()));
 		messageTemplate.convertAndSend("/exchange/celery/celery",
-			stompMessageDto.toCeleryMessageDto("inference", jsonHistory));
+			stompMessageDto.toCeleryMessageDto("inference", history));
 		messageTemplate.convertAndSend("/topic/" + username, stompMessageDto);
 	}
 }

@@ -21,6 +21,11 @@ public class StompMessageService {
 		return stompMessageRepository.findByMessageFromOrMessageTo(username, username);
 	}
 
+	public boolean messageExists(String messageId) {
+		List<StompMessageEntity> messages = stompMessageRepository.findByMessageId(messageId);
+		return messages.size() == 1;
+	}
+
 	public StompMessageEntity save(StompMessageDto request) {
 		return stompMessageRepository.save(request.toEntity());
 	}
