@@ -28,9 +28,6 @@ public class StompOutboundHandler implements ChannelInterceptor {
 		if (StompCommand.MESSAGE.equals(command)) {
 			String jsonPayload = new String((byte[]) message.getPayload());
 			StompMessageDto stompMessageDto = convertMessageToStompDto(jsonPayload);
-			stompMessageDto.setReplyMessageId()
-				.setStatus("Outbound Handler Create This");
-			// Insert into database
 			if (!stompMessageService.messageExists(stompMessageDto.getMessageId())) {
 				stompMessageService.save(stompMessageDto);
 			}
