@@ -15,6 +15,7 @@ import lombok.ToString;
 @NoArgsConstructor
 public class StompMessageDto {
 	private String messageId = UUID.randomUUID().toString();
+	private String userId;
 	private String replyMessageId;
 	private String status;
 	private String content;
@@ -28,6 +29,11 @@ public class StompMessageDto {
 		this.status = status;
 		this.content = content;
 		this.messageFrom = messageFrom;
+	}
+
+	public StompMessageDto setUserId(String userId) {
+		this.userId = userId;
+		return this;
 	}
 
 	public StompMessageDto setReplyMessageId(String replyMessageId) {
@@ -79,6 +85,7 @@ public class StompMessageDto {
 	public StompMessageEntity toEntity() {
 		StompMessageEntity entity = new StompMessageEntity();
 		entity.setMessageId(this.messageId);
+		entity.setUserId(this.userId);
 		entity.setReplyMessageId(this.replyMessageId);
 		entity.setStatus(this.status);
 		entity.setContent(this.content);

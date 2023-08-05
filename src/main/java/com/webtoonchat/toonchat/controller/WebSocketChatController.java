@@ -35,15 +35,28 @@ public class WebSocketChatController {
 		Optional<Character> character = characterService.getCharacterInfo(id);
 		String characterName = character.map(Character::getBotName).orElse("There is No bot to talk");
 
-		stompMessageDto.setReplyMessageId()
+		stompMessageDto.setUserId(username)
+			.setReplyMessageId()
 			.setMessageFrom(username)
 			.setMessageTo(id)
 			.setStatus("STARTED")
 			.setCharacterName(characterName);
+		// history 가져오기
+		List<StompMessageEntity> history = stompMessageService.getUserChatHistory(username, characterName);
+		int count = 0;
+		for (StompMessageEntity message : history) {
+			System.out.println("count++ = " + count++);
+			System.out.println("message.getUserId() = " + message.getUserId());
+			System.out.println("Message Id: " + message.getMessageId());
+			System.out.println("Status: " + message.getStatus());
+			System.out.println("Content: " + message.getContent());
+			System.out.println("Message From: " + message.getMessageFrom());
+			System.out.println("Character Name: " + message.getCharacterName());
+			System.out.println("CreatedAt: " + message.getCreatedAt());
+			System.out.println("----------------------------------");
+		}
 		// 채팅 저장
 		stompMessageService.save(stompMessageDto);
-		// history 가져오기
-		List<StompMessageEntity> history = stompMessageService.getUserChatHistory(username);
 		messageTemplate.convertAndSend("/exchange/celery/celery",
 			stompMessageDto.toCeleryMessageDto("inference", history));
 		messageTemplate.convertAndSend("/topic/" + username, stompMessageDto);
