@@ -43,18 +43,6 @@ public class WebSocketChatController {
 			.setCharacterName(characterName);
 		// history 가져오기
 		List<StompMessageEntity> history = stompMessageService.getUserChatHistory(username, characterName);
-		int count = 0;
-		for (StompMessageEntity message : history) {
-			System.out.println("count++ = " + count++);
-			System.out.println("message.getUserId() = " + message.getUserId());
-			System.out.println("Message Id: " + message.getMessageId());
-			System.out.println("Status: " + message.getStatus());
-			System.out.println("Content: " + message.getContent());
-			System.out.println("Message From: " + message.getMessageFrom());
-			System.out.println("Character Name: " + message.getCharacterName());
-			System.out.println("CreatedAt: " + message.getCreatedAt());
-			System.out.println("----------------------------------");
-		}
 		// 채팅 저장
 		stompMessageService.save(stompMessageDto);
 		messageTemplate.convertAndSend("/exchange/celery/celery",
