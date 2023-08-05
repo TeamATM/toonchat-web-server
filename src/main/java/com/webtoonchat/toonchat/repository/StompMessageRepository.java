@@ -10,5 +10,7 @@ import com.webtoonchat.toonchat.domain.chat.StompMessageEntity;
 @Repository
 public interface StompMessageRepository extends MongoRepository<StompMessageEntity, String>  {
 	List<StompMessageEntity> findByMessageFromOrMessageTo(String messageFrom, String messageTo);
+
+	List<StompMessageEntity> findByMessageId(String messageId);
 }
 

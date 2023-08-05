@@ -1,5 +1,9 @@
 package com.webtoonchat.toonchat.dto;
 
+import java.util.List;
+
+import com.webtoonchat.toonchat.domain.chat.StompMessageEntity;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -9,7 +13,7 @@ public class CeleryArgsDto {
 	/*
 	 * Spring에서 Celery로 작업을 넘겨줄때 필요한 정보
 	 * */
-	private String history;
+	private List<StompMessageEntity> history;
 	private String content;
 	private String messageFrom;
 	private String messageTo;

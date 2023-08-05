@@ -1,6 +1,7 @@
 package com.webtoonchat.toonchat.dto;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import com.webtoonchat.toonchat.domain.chat.StompMessageEntity;
@@ -69,7 +70,7 @@ public class StompMessageDto {
 		return this;
 	}
 
-	public CeleryMessageDto toCeleryMessageDto(String task, String history) {
+	public CeleryMessageDto toCeleryMessageDto(String task, List<StompMessageEntity> history) {
 		return CeleryMessageDto.build(replyMessageId, task)
 			.addArgs(new CeleryArgsDto(history, content, messageFrom, messageTo, characterName))
 			.addArgs(doStream);
