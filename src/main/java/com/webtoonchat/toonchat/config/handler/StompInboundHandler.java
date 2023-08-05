@@ -25,7 +25,7 @@ public class StompInboundHandler implements ChannelInterceptor {
 
 			return MessageBuilder.createMessage(message.getPayload(), accessor.getMessageHeaders());
 		}
-
+		System.out.println("message by preSend = " + message);
 		return message;
 	}
 }
