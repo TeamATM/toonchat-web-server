@@ -78,7 +78,7 @@ public class StompMessageDto {
 
 	public CeleryMessageDto toCeleryMessageDto(String task, List<StompMessageEntity> history) {
 		return CeleryMessageDto.build(replyMessageId, task)
-			.addArgs(new CeleryArgsDto(history, content, messageFrom, messageTo, characterName))
+			.addArgs(new CeleryArgsDto(history, userId, content, messageFrom, messageTo, characterName))
 			.addArgs(doStream);
 	}
 
