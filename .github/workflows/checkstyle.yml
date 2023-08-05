@@ -11,13 +11,7 @@ on:
         - develop
 
 env:
-  ECR_REPOSITORY: toonchat-web-server
   AWS_REGION: ap-northeast-2
-  RELAY_HOST: ${{ secrets.RELAY_HOST }}
-  SYSTEM_USERNAME: ${{ secrets.SYSTEM_USERNAME }}
-  SYSTEM_PASSWORD: ${{ secrets.SYSTEM_PASSWORD }}
-  CLIENT_USERNAME: ${{ secrets.CLIENT_USERNAME }}
-  CLIENT_PASSWORD: ${{ secrets.CLIENT_PASSWORD }}
 
 jobs:
   build:
@@ -29,6 +23,23 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - uses: keithweaver/aws-s3-github-action@v1.0.0 # Verifies the recursive flag
+        name: sync folder
+        with:
+          command: sync
+          source: ${{ secrets.S3_BUCKET }}
+          destination: ./src/main/resources/
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_region: ${{ secrets.AWS_REGION }}
 
       - name: Setup Java JDK
         uses: actions/setup-java@v1.4.4
@@ -115,7 +126,7 @@ jobs:
           file: ./${{ env.DIR_NAME }}/Dockerfile
           push: true
           tags: |
-            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest
-            ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{env.PROJECT_VERSION}}
+            ${{ env.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:latest
+            ${{ env.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:${{env.PROJECT_VERSION}}
           build-args: |
             jarFile=${{ env.DIR_NAME }}/build/libs/${{ env.PROJECT_NAME }}-${{ env.PROJECT_VERSION }}.jar
