@@ -18,8 +18,11 @@ public class StompMessageService {
 	private final StompMessageRepository stompMessageRepository;
 
 	public List<StompMessageEntity> getUserChatHistory(String userId, String characterName) {
-		//return stompMessageRepository.findByMessageFromOrMessageTo(username, username);
 		return stompMessageRepository.findByUserIdAndCharacterName(userId, characterName);
+	}
+
+	public StompMessageEntity getLastChat(String userId, String characterName) {
+		return stompMessageRepository.findLastChatByUserIdAndCharacterName(userId, characterName);
 	}
 
 	public boolean messageExists(String messageId) {

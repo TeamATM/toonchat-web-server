@@ -1,27 +1,35 @@
 package com.webtoonchat.toonchat.controller.chat;
 
-
+import com.webtoonchat.toonchat.SessionUtils;
+import com.webtoonchat.toonchat.domain.chat.Character;
+import com.webtoonchat.toonchat.domain.chat.StompMessageEntity;
+import com.webtoonchat.toonchat.service.chat.CharacterService;
+import com.webtoonchat.toonchat.service.chat.StompMessageService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.webtoonchat.toonchat.domain.chat.Chat;
-import com.webtoonchat.toonchat.dto.chat.AddChatRequest;
-import com.webtoonchat.toonchat.service.chat.ChatService;
+import java.util.Optional;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class ChatApiController {
-	private final ChatService chatService;
+	private final StompMessageService stompMessageService;
+	private final CharacterService characterService;
+	@GetMapping("/api/chat/{id}")
+	public ResponseEntity<StompMessageEntity> getLastChat(@PathVariable String id) {
+		String username = SessionUtils.getUserName();
+		Optional<Character> character = characterService.getCharacterInfo(id);
+		String characterName = character.map(Character::getBotName).orElse("There is No bot to talk");
+
+		StompMessageEntity lastChat = stompMessageService.getLastChat(username, characterName);
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(lastChat);
+	}
+
 	// @PostMapping("/api/articles")
 	// public ResponseEntity<Article> addArticle(@RequestBody AddArticleRequest request){
 	// 	Article savedArticle = blogService.save(request);

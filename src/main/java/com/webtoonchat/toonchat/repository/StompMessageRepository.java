@@ -19,6 +19,11 @@ public interface StompMessageRepository extends MongoRepository<StompMessageEnti
 	})
 	List<StompMessageEntity> findByUserIdAndCharacterName(String userId, String characterName);
 
+	@Aggregation(pipeline = {
+		"{ '$sort' :  {_id: -1}}",
+		"{ '$limit' : 1 }"
+	})
+	StompMessageEntity findLastChatByUserIdAndCharacterName(String userId, String characterName);
+
 	List<StompMessageEntity> findByMessageId(String messageId);
 }
-
