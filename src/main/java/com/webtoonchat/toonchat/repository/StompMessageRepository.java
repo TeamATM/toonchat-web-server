@@ -13,6 +13,7 @@ import com.webtoonchat.toonchat.domain.chat.StompMessageEntity;
 @Repository
 public interface StompMessageRepository extends MongoRepository<StompMessageEntity, String>  {
 	@Aggregation(pipeline = {
+		"{ '$match' :  {characterName:?1, userId:?0}}",
 		"{ '$sort' :  {_id: -1}}",
 		"{ '$limit' : 10 }",
 		"{ '$sort' :  {_id: 1}}"
@@ -20,6 +21,7 @@ public interface StompMessageRepository extends MongoRepository<StompMessageEnti
 	List<StompMessageEntity> findByUserIdAndCharacterName(String userId, String characterName);
 
 	@Aggregation(pipeline = {
+		"{ '$match' :  {characterName:?1, userId:?0}}",
 		"{ '$sort' :  {_id: -1}}",
 		"{ '$limit' : 1 }"
 	})
