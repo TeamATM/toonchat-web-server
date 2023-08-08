@@ -28,7 +28,6 @@ public class WebSocketChatController {
 	@MessageMapping("/{id}")
 	public void sendMessage(@Payload StompMessageDto stompMessageDto, @DestinationVariable String id) {
 		String username = SessionUtils.getUserName();
-		System.out.println("username = " + username);
 		//캐릭터 이름 가져오기
 		Optional<Character> character = characterService.getCharacterInfo(id);
 		String characterName = character.map(Character::getBotName).orElse("There is No bot to talk");
@@ -39,19 +38,13 @@ public class WebSocketChatController {
 			.setMessageTo(id)
 			.setStatus("STARTED")
 			.setCharacterName(characterName);
+
 		// history 가져오기
 		List<StompMessageEntity> history = stompMessageService.getUserChatHistory(username, characterName);
-		//		System.out.println("-------hiihi---------------");
-		//
-		//		for (StompMessageEntity message : history) {
-		//			// 여기에서 StompMessageEntity의 필드를 사용하여 원하는 출력 방식으로 조합합니다.
-		//			// 예를 들면, message.getSender(), message.getContent() 등을 이용해 출력할 수 있습니다.
-		//			System.out.println("message = " + message.getUserId());
-		//			System.out.println("message.getCharacterName() = " + message.getCharacterName());
-		//			System.out.println("-------------------------------");
-		//		}
+
 		// 채팅 저장
 		stompMessageService.save(stompMessageDto);
+
 		messageTemplate.convertAndSend("/exchange/celery/celery",
 			stompMessageDto.toCeleryMessageDto("inference", history));
 		messageTemplate.convertAndSend("/topic/" + username, stompMessageDto);
