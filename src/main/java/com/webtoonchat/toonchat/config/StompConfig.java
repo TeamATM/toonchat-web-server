@@ -4,7 +4,6 @@ import java.util.Objects;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import org.springframework.messaging.converter.CompositeMessageConverter;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
@@ -13,6 +12,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 
 import com.webtoonchat.toonchat.config.handler.StompInboundHandler;
 import com.webtoonchat.toonchat.config.handler.StompOutboundHandler;
+import com.webtoonchat.toonchat.config.security.AnonymousHandshakeInterceptor;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,7 +30,10 @@ public class StompConfig
 		/*
 		 * TODO: CORS 관련 설정
 		 * */
-		registry.addEndpoint("ws").setAllowedOriginPatterns("*").withSockJS();
+		registry.addEndpoint("ws")
+			.setAllowedOriginPatterns("*")
+			.addInterceptors(new AnonymousHandshakeInterceptor())
+			.withSockJS();
 	}
 
 	@Override
