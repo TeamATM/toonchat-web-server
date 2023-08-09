@@ -1,5 +1,6 @@
 package com.webtoonchat.toonchat.controller.chat;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
@@ -41,5 +42,19 @@ public class ChatApiController {
 					.body(lastChat);
 		}
 		return null;
+	}
+
+	@GetMapping("/api/chat/{id}/history")
+	public ResponseEntity<List<StompMessageEntity>> getChatHistory(@PathVariable String id) {
+		String username = SessionUtils.getUserName();
+		username = "anonymous";
+
+		Optional<Character> character = characterService.getCharacterInfo(id);
+		String characterName = character.map(Character::getBotName).orElse("There is No bot to talk");
+
+		List<StompMessageEntity> chatHistory = stompMessageService.getUserChatHistory(username, characterName);
+
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(chatHistory);
 	}
 }
