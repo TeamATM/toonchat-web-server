@@ -2,7 +2,6 @@ package com.webtoonchat.toonchat.dto;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.webtoonchat.toonchat.domain.chat.StompMessageEntity;
 
 import lombok.AllArgsConstructor;
@@ -20,6 +19,5 @@ public class CeleryArgsDto {
 	private String messageFrom;
 	private String messageTo;
 	private String characterName;
-	@JsonProperty("generation_args")
-	private GenerationArgsDto generationArgsDto;
+	private GenerationArgsDto generationArgs;
 }
