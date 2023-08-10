@@ -23,6 +23,7 @@ public class StompMessageDto {
 	private String messageTo;
 	private String characterName;
 	private Long createdAt = new Date().getTime();
+	private GenerationArgsDto generationArgs = new GenerationArgsDto();
 	private Boolean doStream = Boolean.FALSE;
 
 	public StompMessageDto(String status, String content, String messageFrom) {
@@ -77,8 +78,6 @@ public class StompMessageDto {
 	}
 
 	public CeleryMessageDto toCeleryMessageDto(String task, List<StompMessageEntity> history) {
-		GenerationArgsDto generationArgsDto = new GenerationArgsDto();
-
 		return CeleryMessageDto.build(replyMessageId, task)
 			.addArgs(new CeleryArgsDto(history,
 				userId,
@@ -86,7 +85,7 @@ public class StompMessageDto {
 				messageFrom,
 				messageTo,
 				characterName,
-				generationArgsDto))
+				generationArgs))
 			.addArgs(doStream);
 	}
 
