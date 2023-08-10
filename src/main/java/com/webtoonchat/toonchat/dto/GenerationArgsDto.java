@@ -13,4 +13,8 @@ public class GenerationArgsDto {
 	private Float temperature;
 	@JsonProperty("repetition_penalty")
 	private Float repetitionPenalty;
+	@JsonProperty("top_p")
+	private Float topP;
+	@JsonProperty("top_k")
+	private Float topK;
 }
