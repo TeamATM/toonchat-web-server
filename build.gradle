@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'com.webtoonchat'
-version = '0.0.1-SNAPSHOT'
+version = '0.1.0'
 
 java {
     sourceCompatibility = '17'
@@ -39,6 +39,15 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+//    implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
+//    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '3.0.0'
+    // Swagger
+    //implementation 'io.springfox:springfox-swagger2:3.0.0'
+//    implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+//    implementation 'io.springfox:springfox-boot-starter:3.0.0'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+
+
 }
 
 tasks.named('test') {

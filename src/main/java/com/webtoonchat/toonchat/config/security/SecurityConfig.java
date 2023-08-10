@@ -1,4 +1,4 @@
-package com.webtoonchat.toonchat.config;
+package com.webtoonchat.toonchat.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

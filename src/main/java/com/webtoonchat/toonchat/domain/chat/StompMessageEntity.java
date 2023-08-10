@@ -14,6 +14,7 @@ import lombok.Setter;
 public class StompMessageEntity {
 	@Id
 	private String id;
+	private String userId;
 	private String messageId;
 	private String replyMessageId;
 	private String status;
