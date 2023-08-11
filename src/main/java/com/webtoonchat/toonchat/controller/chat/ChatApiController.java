@@ -29,7 +29,7 @@ public class ChatApiController {
 	) boolean recent) {
 		if (recent) {
 			String username = SessionUtils.getUserName();
-			username = "anonymous";
+			username = "anonymous-8b015168-f432-477a-a830-0c6229ef1af6";
 			/**
 			 * TO DO : anonymousUser가 나와서 못찾는 문제 해결
 			 * 현재는 anonymous를 넣는 방식으로 땜빵했지만, 이후에 로그인 기능 생기면 보안 정책을 맞춰서 해결해야함
