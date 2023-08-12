@@ -71,16 +71,6 @@ public class ChatApiController {
 			.body(character.get());
 	}
 
-	@GetMapping("/api/info/character/{id}")
-	public ResponseEntity<Character> getCharacterInfo(@PathVariable String id) {
-		Optional<Character> character = characterService.getCharacterInfo(id);
-		if (character.isEmpty()) {
-			ResponseEntity.notFound();
-		}
-		return ResponseEntity.status(HttpStatus.OK)
-				.body(character.get());
-	}
-
 	@GetMapping("/api/chat/{id}/intimacy")
 	public ResponseEntity<Intimacy> getIntimacyScore(@PathVariable String id) {
 		String username = SessionUtils.getUserName();
@@ -97,5 +87,4 @@ public class ChatApiController {
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(intimacyDto.toEntity());
 	}
-
 }
