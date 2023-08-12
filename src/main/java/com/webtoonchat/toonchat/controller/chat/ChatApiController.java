@@ -25,9 +25,10 @@ import lombok.RequiredArgsConstructor;
 public class ChatApiController {
 	private final StompMessageService stompMessageService;
 	private final CharacterService characterService;
+
 	@GetMapping("/api/chat/{id}")
 	public ResponseEntity<StompMessageEntity> getLastChat(
-			@PathVariable String id, @RequestParam(required = false, defaultValue = "false"
+		@PathVariable String id, @RequestParam(required = false, defaultValue = "false"
 	) boolean recent) {
 		if (recent) {
 			String username = SessionUtils.getUserName();
@@ -41,7 +42,7 @@ public class ChatApiController {
 
 			StompMessageEntity lastChat = stompMessageService.getLastChat(username, characterName);
 			return ResponseEntity.status(HttpStatus.OK)
-					.body(lastChat);
+				.body(lastChat);
 		}
 		return null;
 	}
@@ -57,7 +58,17 @@ public class ChatApiController {
 		List<StompMessageEntity> chatHistory = stompMessageService.getUserChatHistory(username, characterName);
 
 		return ResponseEntity.status(HttpStatus.OK)
-				.body(chatHistory);
+			.body(chatHistory);
+	}
+
+	@GetMapping("/api/info/character/{id}")
+	public ResponseEntity<Character> getCharacterInfo(@PathVariable String id) {
+		Optional<Character> character = characterService.getCharacterInfo(id);
+		if (character.isEmpty()) {
+			ResponseEntity.notFound();
+		}
+		return ResponseEntity.status(HttpStatus.OK)
+			.body(character.get());
 	}
 
 	@GetMapping("/api/info/character/{id}")
