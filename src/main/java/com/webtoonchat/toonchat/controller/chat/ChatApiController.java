@@ -29,7 +29,7 @@ public class ChatApiController {
 	) boolean recent) {
 		if (recent) {
 			String username = SessionUtils.getUserName();
-			username = "anonymous";
+			username = "anonymous-05c4e7a7-e21b-474a-8092-d89918901dd6";
 			/**
 			 * TO DO : anonymousUser가 나와서 못찾는 문제 해결
 			 * 현재는 anonymous를 넣는 방식으로 땜빵했지만, 이후에 로그인 기능 생기면 보안 정책을 맞춰서 해결해야함
@@ -47,7 +47,7 @@ public class ChatApiController {
 	@GetMapping("/api/chat/{id}/history")
 	public ResponseEntity<List<StompMessageEntity>> getChatHistory(@PathVariable String id) {
 		String username = SessionUtils.getUserName();
-		username = "anonymous";
+		username = "anonymous-05c4e7a7-e21b-474a-8092-d89918901dd6";
 
 		Optional<Character> character = characterService.getCharacterInfo(id);
 		String characterName = character.map(Character::getBotName).orElse("There is No bot to talk");
@@ -56,5 +56,15 @@ public class ChatApiController {
 
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(chatHistory);
+	}
+
+	@GetMapping("/api/info/character/{id}")
+	public ResponseEntity<Character> getCharacterInfo(@PathVariable String id) {
+		Optional<Character> character = characterService.getCharacterInfo(id);
+		if (character.isEmpty()) {
+			ResponseEntity.notFound();
+		}
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(character.get());
 	}
 }

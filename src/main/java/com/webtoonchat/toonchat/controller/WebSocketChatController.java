@@ -28,6 +28,7 @@ public class WebSocketChatController {
 	@MessageMapping("/{id}")
 	public void sendMessage(@Payload StompMessageDto stompMessageDto, @DestinationVariable String id) {
 		String username = SessionUtils.getUserName();
+		username = "anonymous-05c4e7a7-e21b-474a-8092-d89918901dd6";
 		//캐릭터 이름 가져오기
 		Optional<Character> character = characterService.getCharacterInfo(id);
 		String characterName = character.map(Character::getBotName).orElse("There is No bot to talk");
