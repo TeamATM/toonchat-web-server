@@ -14,8 +14,9 @@ import com.webtoonchat.toonchat.domain.chat.Character;
 //	Optional<Character> findByCid(String id);
 //
 //}
+@Repository
 public interface CharacterRepository extends JpaRepository<Character, Long> {
 
 	// 웹툰 ID로 캐릭터 조회 메서드
-	Optional<Character> findByCid(String id);
+	Optional<Character> findByCid(String cid);
 }
