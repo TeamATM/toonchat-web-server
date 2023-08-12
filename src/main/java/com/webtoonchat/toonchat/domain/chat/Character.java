@@ -1,19 +1,17 @@
 package com.webtoonchat.toonchat.domain.chat;
 
 
-import java.util.List;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-
+@Table(name = "characters")
 @Data
+@NoArgsConstructor
 @Entity
 public class Character {
 
@@ -21,29 +19,12 @@ public class Character {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private String cid;
 	private String botName;
+	private String cid;
 	private String hashtag;
 	private String imageUrl;
 	private String introduction;
-
-	@ManyToOne
-	@JoinColumn(name = "webtoon_id")
-	private Webtoon webtoon;
+	private String webtoonName;
+	private String corpName;
 
 }
-
-//@NoArgsConstructor
-//@Getter
-//@Setter
-//@Document(collection = "character")
-//public class Character {
-//	@Id
-//	private ObjectId id;
-//	private String cid;
-//	private String botName;
-//	private String hashtag;
-//	private String imageUrl;
-//	private String webtoonId;
-//	private String introduction;
-//}
