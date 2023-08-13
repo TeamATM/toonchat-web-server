@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.webtoonchat.toonchat.SessionUtils;
 import com.webtoonchat.toonchat.domain.chat.Character;
+import com.webtoonchat.toonchat.domain.chat.Intimacy;
 import com.webtoonchat.toonchat.domain.chat.StompMessageEntity;
+import com.webtoonchat.toonchat.dto.chat.IntimacyDto;
 import com.webtoonchat.toonchat.service.chat.CharacterService;
 import com.webtoonchat.toonchat.service.chat.StompMessageService;
 
@@ -67,4 +69,22 @@ public class ChatApiController {
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(character.get());
 	}
+
+	@GetMapping("/api/chat/{id}/intimacy")
+	public ResponseEntity<Intimacy> getIntimacyScore(@PathVariable String id) {
+		String username = SessionUtils.getUserName();
+		username = "anonymous-05c4e7a7-e21b-474a-8092-d89918901dd6";
+
+		Optional<Character> character = characterService.getCharacterInfo(id);
+		String characterName = character.map(Character::getBotName).orElse("There is No bot to talk");
+
+		List<StompMessageEntity> chatHistory = stompMessageService.getUserChatHistory(username, characterName);
+
+		// 채팅 기록을 기반으로 친밀도 점수 계산
+		IntimacyDto intimacyDto = new IntimacyDto();
+
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(intimacyDto.toEntity());
+	}
+
 }
