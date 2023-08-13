@@ -48,11 +48,7 @@ public class ChatApiController {
 	@GetMapping("/api/chat/{id}/history")
 	public ResponseEntity<List<StompMessageEntity>> getChatHistory(@PathVariable String id) {
 		String username = SessionUtils.getUserName();
-<<<<<<< HEAD
 		username = "anonymous-05c4e7a7-e21b-474a-8092-d89918901dd6";
-=======
-		username = "anonymous-8b015168-f432-477a-a830-0c6229ef1af6";
->>>>>>> 456e310 (Chore: to check api of anonymous  client)
 
 		Optional<Character> character = characterService.getCharacterInfo(id);
 		String characterName = character.map(Character::getBotName).orElse("There is No bot to talk");
