@@ -12,12 +12,12 @@ on:
           - develop
         default: develop
 
+env:
+  AWS_REGION: ap-northeast-2
+
 jobs:
   build:
     runs-on: ubuntu-20.04
-    outputs:
-      PROJECT_NAME: ${{ steps.set-env.outputs.PROJECT_NAME }}
-      PROJECT_VERSION: ${{ steps.set-env.outputs.PROJECT_VERSION }}
 
     steps:
       - name: Checkout code
