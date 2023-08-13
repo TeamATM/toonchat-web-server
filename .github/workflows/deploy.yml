@@ -1,0 +1,96 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      tags:
+        description: 'Container tag name'
+        required: true
+        type: choice
+        options:
+          - latest
+          - develop
+        default: develop
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    outputs:
+      PROJECT_NAME: ${{ steps.set-env.outputs.PROJECT_NAME }}
+      PROJECT_VERSION: ${{ steps.set-env.outputs.PROJECT_VERSION }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - uses: keithweaver/aws-s3-github-action@v1.0.0 # Verifies the recursive flag
+        name: sync folder
+        with:
+          command: sync
+          source: ${{ secrets.S3_BUCKET }}
+          destination: ./src/main/resources/
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_region: ${{ secrets.AWS_REGION }}
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v1.4.4
+        with:
+          java-version: 17
+          distribution: 'corretto'
+          java-package: 'jdk'
+
+      - name: Cache Gradle modules
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle-
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+        shell: bash
+
+      - name: Check style
+        run: ./gradlew checkstyle
+
+      - name: Test with Gradle
+        run: ./gradlew test
+
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      - name: Set PROJECT_NAME and PROJECT_VERSION from Gradle
+        id: set-env
+        run: |
+          echo "PROJECT_NAME=$(./gradlew properties | grep '^name:' | awk '{print $2}')" >> "$GITHUB_ENV"
+          echo "PROJECT_VERSION=$(./gradlew properties | grep '^version:' | awk '{print $2}')" >> "$GITHUB_ENV"
+        shell: bash
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build and Push
+        id: build-push
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: |
+            ${{ env.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:${{ inputs.tags }}
+            ${{ env.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:${{env.PROJECT_VERSION}}
+          build-args: |
+            jarFile=./build/libs/${{ env.PROJECT_NAME }}-${{ env.PROJECT_VERSION }}.jar
