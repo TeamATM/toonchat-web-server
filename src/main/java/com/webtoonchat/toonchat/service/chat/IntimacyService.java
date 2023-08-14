@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 public class IntimacyService {
 	private final IntimacyRepository intimacyRepository;
 
-	public Intimacy saveIntimacy(Intimacy intimacy) {
+	public Intimacy save(Intimacy intimacy) {
 		return intimacyRepository.save(intimacy);
 	}
 

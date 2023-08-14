@@ -4,9 +4,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Table(name = "intimacy")
 @Data
 @NoArgsConstructor
 @Entity
@@ -17,7 +19,7 @@ public class Intimacy {
 	private Long id;
 
 	private String userName;
-	private Long score;
+	private String characterName;
 	private Long level;
 	private Long gauge;
 

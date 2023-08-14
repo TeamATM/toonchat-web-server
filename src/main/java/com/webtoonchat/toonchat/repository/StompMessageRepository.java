@@ -28,4 +28,7 @@ public interface StompMessageRepository extends MongoRepository<StompMessageEnti
 	StompMessageEntity findLastChatByUserIdAndCharacterName(String userId, String characterName);
 
 	List<StompMessageEntity> findByMessageId(String messageId);
+
+	@Query(value = "{characterName: ?1, userId: ?0}", count = true)
+	long totalHistoryNumber(String userId, String characterName);
 }

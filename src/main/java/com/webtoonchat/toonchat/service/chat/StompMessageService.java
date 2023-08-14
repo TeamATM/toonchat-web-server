@@ -30,6 +30,10 @@ public class StompMessageService {
 		return messages.size() == 1;
 	}
 
+	public long totalHistoryNumber(String userId, String characterName) {
+		return stompMessageRepository.totalHistoryNumber(userId, characterName);
+	}
+
 	public StompMessageEntity save(StompMessageDto request) {
 		return stompMessageRepository.save(request.toEntity());
 	}

@@ -16,6 +16,7 @@ import com.webtoonchat.toonchat.domain.chat.Intimacy;
 import com.webtoonchat.toonchat.domain.chat.StompMessageEntity;
 import com.webtoonchat.toonchat.dto.chat.IntimacyDto;
 import com.webtoonchat.toonchat.service.chat.CharacterService;
+import com.webtoonchat.toonchat.service.chat.IntimacyService;
 import com.webtoonchat.toonchat.service.chat.StompMessageService;
 
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class ChatApiController {
 	private final StompMessageService stompMessageService;
 	private final CharacterService characterService;
+	private final IntimacyService intimacyService;
 
 	@GetMapping("/api/chat/{id}")
 	public ResponseEntity<StompMessageEntity> getLastChat(
@@ -47,7 +49,7 @@ public class ChatApiController {
 		return null;
 	}
 
-	@GetMapping("/api/chat/{id}/history")
+	@GetMapping("/api/chat/history/{id}")
 	public ResponseEntity<List<StompMessageEntity>> getChatHistory(@PathVariable String id) {
 		String username = SessionUtils.getUserName();
 		username = "anonymous-05c4e7a7-e21b-474a-8092-d89918901dd6";
@@ -71,7 +73,7 @@ public class ChatApiController {
 			.body(character.get());
 	}
 
-	@GetMapping("/api/chat/{id}/intimacy")
+	@GetMapping("/api/chat/intimacy/{id}")
 	public ResponseEntity<Intimacy> getIntimacyScore(@PathVariable String id) {
 		String username = SessionUtils.getUserName();
 		username = "anonymous-05c4e7a7-e21b-474a-8092-d89918901dd6";
@@ -79,10 +81,15 @@ public class ChatApiController {
 		Optional<Character> character = characterService.getCharacterInfo(id);
 		String characterName = character.map(Character::getBotName).orElse("There is No bot to talk");
 
-		List<StompMessageEntity> chatHistory = stompMessageService.getUserChatHistory(username, characterName);
-
+		long chatHistorySize = stompMessageService.totalHistoryNumber(username, characterName);
+		System.out.println("chatHistorySize = " + chatHistorySize);
 		// 채팅 기록을 기반으로 친밀도 점수 계산
 		IntimacyDto intimacyDto = new IntimacyDto();
+		intimacyDto.setScore(chatHistorySize * 10)
+				.setUserName(username)
+				.setCharacterName(characterName);
+		System.out.println("intimacyDto.toString() = " + intimacyDto.toString());
+		intimacyService.save(intimacyDto.toEntity());
 
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(intimacyDto.toEntity());
