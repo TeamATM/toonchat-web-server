@@ -45,7 +45,7 @@ public class ChatApiController {
 		return null;
 	}
 
-	@GetMapping("/api/chat/{id}/history")
+	@GetMapping("/api/chat/history/{id}")
 	public ResponseEntity<List<StompMessageEntity>> getChatHistory(@PathVariable String id) {
 		String username = SessionUtils.getUserName();
 		username = "anonymous-05c4e7a7-e21b-474a-8092-d89918901dd6";
