@@ -38,7 +38,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			if (StringUtils.hasText(token)) {
 				getAuthentication(token);
 			}
-			filterChain.doFilter(request, response);
 		} catch (NullPointerException | IllegalStateException e) {
 			request.setAttribute("exception", JwtExceptionCode.NOT_FOUND_TOKEN.getCode());
 			log.error("Not found Token // token : {}", token);
@@ -70,6 +69,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			log.error("====================================================");
 			throw new BadCredentialsException("throw new exception");
 		}
+
+		/**
+		 * TODO: 주어진 accessToken이 blacklist에 등록되어있는지 redis에서 확인
+		 * blacklist에 등록되어 있다면 throw exception이나 return.
+		 */
+		filterChain.doFilter(request, response);
 	}
 
 	private void getAuthentication(String token) {

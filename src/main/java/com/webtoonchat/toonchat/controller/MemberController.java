@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,6 +23,7 @@ import com.webtoonchat.toonchat.dto.MemberLoginResponseDto;
 import com.webtoonchat.toonchat.dto.MemberSignupDto;
 import com.webtoonchat.toonchat.dto.MemberSignupResponseDto;
 import com.webtoonchat.toonchat.dto.RefreshTokenDto;
+import com.webtoonchat.toonchat.repository.MemberRepository;
 import com.webtoonchat.toonchat.security.jwt.util.JwtTokenizer;
 import com.webtoonchat.toonchat.service.MemberService;
 import com.webtoonchat.toonchat.service.RefreshTokenService;
@@ -38,6 +38,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/members")
 public class MemberController {
 
+	private final MemberRepository memberRepository;
 	private final JwtTokenizer jwtTokenizer;
 	private final MemberService memberService;
 	private final RefreshTokenService refreshTokenService;
@@ -49,8 +50,13 @@ public class MemberController {
 			return new ResponseEntity(HttpStatus.BAD_REQUEST);
 		}
 		/**
-		 * TO-Do : 기본 프로필 url set, provider set
+		 * TODO : 기본 프로필 url set, provider set
+		 *  로그인 중복 처리(완)
 		 */
+		if (memberRepository.existsByEmailAndProvider(memberSignupDto.getEmail(), memberSignupDto.getProvider())) {
+			return new ResponseEntity(HttpStatus.CONFLICT);
+		}
+
 		Member member = new Member();
 		member.setName(memberSignupDto.getName());
 		member.setEmail(memberSignupDto.getEmail());
@@ -112,6 +118,9 @@ public class MemberController {
 
 	@DeleteMapping("/logout")
 	public ResponseEntity logout(@RequestBody RefreshTokenDto refreshTokenDto) {
+		/**
+		 * TODO: Redis에 accessToken blacklist 등록하기 + ttl설정(유효기간까지), filter단에서 인가하기 전에 blacklist 등록되어있는지 확인
+		 */
 		refreshTokenService.deleteRefreshToken(refreshTokenDto.getRefreshToken());
 		return new ResponseEntity(HttpStatus.OK);
 	}
@@ -149,4 +158,6 @@ public class MemberController {
 				.build();
 		return new ResponseEntity(loginResponse, HttpStatus.OK);
 	}
+
 }
+
