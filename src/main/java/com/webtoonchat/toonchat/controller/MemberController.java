@@ -105,13 +105,15 @@ public class MemberController {
 		refreshTokenService.addRefreshToken(refreshTokenEntity);
 
 		/**
-		 * TO-Do : 프로필 url, provider response에 담기
+		 * TO-Do : 프로필 url(완), provider response에 담기(완)
 		 */
 		MemberLoginResponseDto loginResponse = MemberLoginResponseDto.builder()
 				.accessToken(accessToken)
 				.refreshToken(refreshToken)
 				.memberId(member.getMemberId())
 				.nickname(member.getName())
+				.profileUrl(member.getProfileUrl())
+				.provider(member.getProvider())
 				.build();
 		return new ResponseEntity(loginResponse, HttpStatus.OK);
 	}
@@ -158,6 +160,5 @@ public class MemberController {
 				.build();
 		return new ResponseEntity(loginResponse, HttpStatus.OK);
 	}
-
 }
 
