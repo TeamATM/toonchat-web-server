@@ -8,4 +8,7 @@ import com.webtoonchat.toonchat.domain.Member;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 	Optional<Member> findByEmail(String email);
+	/**
+	 * TO-Do : findByEmailAndProvider 추가
+	 */
 }

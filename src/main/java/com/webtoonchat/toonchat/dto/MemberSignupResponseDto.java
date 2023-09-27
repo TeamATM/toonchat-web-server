@@ -11,4 +11,7 @@ public class MemberSignupResponseDto {
 	private String email;
 	private String name;
 	private LocalDateTime regdate;
+	/**
+	 * TO-Do : 프로필 url, provider column 만들기
+	 */
 }
