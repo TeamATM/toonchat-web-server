@@ -21,17 +21,19 @@ import lombok.Setter;
 import lombok.ToString;
 
 @ToString
-@Entity // Database Table과 맵핑하는 객체.
-@Table(name = "member") // Database 테이블 이름 user3 와 User라는 객체가 맵핑.
-@NoArgsConstructor // 기본생성자가 필요하다.
+@Entity
+@Table(name = "member")
+@NoArgsConstructor
 @Setter
 @Getter
 public class Member {
 	@Id // 이 필드가 Table의 PK.
 	@Column(name = "member_id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY) // userId는 자동으로 생성되도록 한다. 1,2,3,4
+	@GeneratedValue(strategy = GenerationType.IDENTITY) // userId는 자동으로 생성
 	private Long memberId;
-
+	/**
+	 * TO-Do : provider 컬럼 추가, 프로필 url column 추가
+	 */
 	@Column(length = 255)
 	private String email;
 
