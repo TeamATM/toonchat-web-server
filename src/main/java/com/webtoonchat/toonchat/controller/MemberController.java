@@ -48,6 +48,9 @@ public class MemberController {
 		if (bindingResult.hasErrors()) {
 			return new ResponseEntity(HttpStatus.BAD_REQUEST);
 		}
+		/**
+		 * TO-Do : 기본 프로필 url set, provider set
+		 */
 		Member member = new Member();
 		member.setName(memberSignupDto.getName());
 		member.setEmail(memberSignupDto.getEmail());
@@ -72,6 +75,9 @@ public class MemberController {
 		}
 
 		// email이 없을 경우 Exception이 발생한다. Global Exception에 대한 처리가 필요하다.
+		/**
+		 * TO-Do : findByEmail -> findByEmailAndProvider  변경하기
+		 */
 		Member member = memberService.findByEmail(loginDto.getEmail());
 		if (!passwordEncoder.matches(loginDto.getPassword(), member.getPassword())) {
 			return new ResponseEntity(HttpStatus.UNAUTHORIZED);
@@ -83,12 +89,18 @@ public class MemberController {
 		String accessToken = jwtTokenizer.createAccessToken(member.getMemberId(), member.getEmail(), roles);
 		String refreshToken = jwtTokenizer.createRefreshToken(member.getMemberId(), member.getEmail(), roles);
 
-		// RefreshToken을 DB에 저장한다. 성능 때문에 DB가 아니라 Redis에 저장하는 것이 좋다.
+		/**
+		 * RefreshToken을 DB에 저장한다.
+		 * TO-Do : 성능 때문에 DB가 아니라 Redis에 저장하는 것이 좋다.
+		 */
 		RefreshToken refreshTokenEntity = new RefreshToken();
 		refreshTokenEntity.setValue(refreshToken);
 		refreshTokenEntity.setMemberId(member.getMemberId());
 		refreshTokenService.addRefreshToken(refreshTokenEntity);
 
+		/**
+		 * TO-Do : 프로필 url, provider response에 담기
+		 */
 		MemberLoginResponseDto loginResponse = MemberLoginResponseDto.builder()
 				.accessToken(accessToken)
 				.refreshToken(refreshToken)
@@ -124,7 +136,9 @@ public class MemberController {
 
 		List roles = (List) claims.get("roles");
 		String email = claims.getSubject();
-
+		/**
+		 * TO-Do : 프로필 url, provider response에 담기
+		 */
 		String accessToken = jwtTokenizer.createAccessToken(userId, email, roles);
 
 		MemberLoginResponseDto loginResponse = MemberLoginResponseDto.builder()
@@ -135,6 +149,4 @@ public class MemberController {
 				.build();
 		return new ResponseEntity(loginResponse, HttpStatus.OK);
 	}
-
-
 }
