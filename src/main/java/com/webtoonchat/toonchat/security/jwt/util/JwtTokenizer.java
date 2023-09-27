@@ -46,6 +46,9 @@ public class JwtTokenizer {
 	}
 
 	private String createToken(Long id, String email, List<String> roles, Long expire, byte[] secretKey) {
+		/**
+		 * TODO: subject를 userId로, claims에 email 추가.
+		 */
 		Claims claims = Jwts.claims().setSubject(email);
 
 		claims.put("roles", roles);

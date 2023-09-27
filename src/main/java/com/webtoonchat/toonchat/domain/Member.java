@@ -34,6 +34,12 @@ public class Member {
 	/**
 	 * TO-Do : provider 컬럼 추가, 프로필 url column 추가
 	 */
+	@Column
+	private String provider;
+
+	@Column
+	private String profileUrl;
+
 	@Column(length = 255)
 	private String email;
 
