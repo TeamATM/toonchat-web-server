@@ -60,8 +60,11 @@ public class MemberController {
 		Member member = new Member();
 		member.setName(memberSignupDto.getName());
 		member.setEmail(memberSignupDto.getEmail());
-		member.setPassword(passwordEncoder.encode(memberSignupDto.getPassword()));
-
+		member.setProvider(memberSignupDto.getProvider());
+		member.setProfileUrl("defaultProfileUrl.png");
+		if (memberSignupDto.getPassword() != null) {
+			member.setPassword(passwordEncoder.encode(memberSignupDto.getPassword()));
+		}
 		Member saveMember = memberService.addMember(member);
 
 		MemberSignupResponseDto memberSignupResponse = new MemberSignupResponseDto();
@@ -69,6 +72,8 @@ public class MemberController {
 		memberSignupResponse.setName(saveMember.getName());
 		memberSignupResponse.setRegdate(saveMember.getRegdate());
 		memberSignupResponse.setEmail(saveMember.getEmail());
+		memberSignupResponse.setProfileUrl(saveMember.getProfileUrl());
+		memberSignupResponse.setProvider(saveMember.getProvider());
 
 		// 회원가입
 		return new ResponseEntity(memberSignupResponse, HttpStatus.CREATED);
@@ -84,9 +89,11 @@ public class MemberController {
 		/**
 		 * TO-Do : findByEmail -> findByEmailAndProvider  변경하기
 		 */
-		Member member = memberService.findByEmail(loginDto.getEmail());
-		if (!passwordEncoder.matches(loginDto.getPassword(), member.getPassword())) {
-			return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+		Member member = memberService.findByEmailAndProvider(loginDto.getEmail(), loginDto.getProvider());
+		if (member.getPassword() != null) {
+			if (!passwordEncoder.matches(loginDto.getPassword(), member.getPassword())) {
+				return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+			}
 		}
 		// List<Role> ===> List<String>
 		List<String> roles = member.getRoles().stream().map(Role::getName).collect(Collectors.toList());
@@ -157,8 +164,11 @@ public class MemberController {
 				.refreshToken(refreshTokenDto.getRefreshToken())
 				.memberId(member.getMemberId())
 				.nickname(member.getName())
+				.profileUrl(member.getProfileUrl())
+				.provider(member.getProvider())
 				.build();
 		return new ResponseEntity(loginResponse, HttpStatus.OK);
 	}
+
 }
 
