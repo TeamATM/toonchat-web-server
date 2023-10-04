@@ -44,6 +44,47 @@ public class MemberController {
 	private final RefreshTokenService refreshTokenService;
 	private final PasswordEncoder passwordEncoder;
 
+	@PostMapping("/social-login")
+	public ResponseEntity socialSignupOrLogin(
+			@RequestBody @Valid MemberSignupDto memberSignupDto, BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			return new ResponseEntity(HttpStatus.BAD_REQUEST);
+		}
+
+		/**
+		 * 가입된 이력 없을 때
+		 */
+		if (!memberRepository.existsByEmailAndProvider(memberSignupDto.getEmail(), memberSignupDto.getProvider())) {
+			Member member = new Member();
+			member.setName(memberSignupDto.getName());
+			member.setEmail(memberSignupDto.getEmail());
+			member.setProvider(memberSignupDto.getProvider());
+			member.setProfileUrl("defaultProfileUrl.png");
+			memberService.addMember(member);
+		}
+		Member foundMember = memberService.findByEmailAndProvider(
+				memberSignupDto.getEmail(), memberSignupDto.getProvider());
+		List<String> roles = foundMember.getRoles().stream().map(Role::getName).collect(Collectors.toList());
+
+		String accessToken = jwtTokenizer.createAccessToken(foundMember.getMemberId(), foundMember.getEmail(), roles);
+		String refreshToken = jwtTokenizer.createRefreshToken(foundMember.getMemberId(), foundMember.getEmail(), roles);
+
+		RefreshToken refreshTokenEntity = new RefreshToken();
+		refreshTokenEntity.setValue(refreshToken);
+		refreshTokenEntity.setMemberId(foundMember.getMemberId());
+		refreshTokenService.addRefreshToken(refreshTokenEntity);
+
+		MemberLoginResponseDto loginResponse = MemberLoginResponseDto.builder()
+				.accessToken(accessToken)
+				.refreshToken(refreshToken)
+				.memberId(foundMember.getMemberId())
+				.nickname(foundMember.getName())
+				.profileUrl(foundMember.getProfileUrl())
+				.provider(foundMember.getProvider())
+				.build();
+		return new ResponseEntity(loginResponse, HttpStatus.OK);
+	}
+
 	@PostMapping("/signup")
 	public ResponseEntity signup(@RequestBody @Valid MemberSignupDto memberSignupDto, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
