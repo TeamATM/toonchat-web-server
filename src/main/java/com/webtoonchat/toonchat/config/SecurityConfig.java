@@ -44,6 +44,7 @@ public class SecurityConfig {
 				.requestMatchers("/swagger/**", "/v3/api-docs/**", "/health", "/boards").permitAll()
 				.requestMatchers(HttpMethod.GET, "/**").hasAnyRole("USER", "ADMIN")
 				.requestMatchers(HttpMethod.POST, "/**").hasAnyRole("USER", "ADMIN")
+				.requestMatchers(HttpMethod.DELETE, "/**").hasAnyRole("USER", "ADMIN")
 				.anyRequest().hasAnyRole("USER", "ADMIN")
 				.and()
 				.exceptionHandling()
