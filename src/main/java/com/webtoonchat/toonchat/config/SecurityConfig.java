@@ -40,7 +40,8 @@ public class SecurityConfig {
 				.httpBasic().disable()
 				.authorizeRequests()
 				.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-				.requestMatchers("/members/signup", "/members/login", "/members/refreshToken").permitAll()
+				.requestMatchers("/members/social-login", "/members/signup",
+						"/members/login", "/members/refreshToken").permitAll()
 				.requestMatchers("/swagger/**", "/v3/api-docs/**", "/health", "/boards").permitAll()
 				.requestMatchers(HttpMethod.GET, "/**").hasAnyRole("USER", "ADMIN")
 				.requestMatchers(HttpMethod.POST, "/**").hasAnyRole("USER", "ADMIN")
