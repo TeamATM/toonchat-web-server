@@ -34,8 +34,7 @@ public class SecurityConfig {
 				.and()
 				.formLogin().disable() // 직접 id, password를 입력받아서 JWT토큰을 리턴하는 API를 직접 만든다.
 				.csrf().disable() // CSRF는 Cross Site Request Forgery의 약자. CSRF공격을 막기 위한 방법.
-				.cors()//.configurationSource(corsConfigurationSource())
-				.and()
+				.cors().disable()//.configurationSource(corsConfigurationSource())
 				.apply(authenticationManagerConfig)
 				.and()
 				.httpBasic().disable()
