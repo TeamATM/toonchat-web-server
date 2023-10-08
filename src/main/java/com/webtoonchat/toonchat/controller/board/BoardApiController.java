@@ -25,41 +25,42 @@ import lombok.RequiredArgsConstructor;
 public class BoardApiController {
 	private final BoardService boardService;
 
-	@PostMapping("/api/boards")
-	public ResponseEntity<Board> addBoard(@RequestBody AddBoardRequest request) {
-		Board savedArticle = boardService.save(request);
+	@PostMapping("/api/boards/{bgno}")
+	public ResponseEntity<Board> addBoard(@PathVariable String bgno, @RequestBody AddBoardRequest request) {
+		Board savedArticle = boardService.save(request, bgno);
 		return ResponseEntity.status(HttpStatus.CREATED)
 				.body(savedArticle);
 	}
 
-	@GetMapping("/api/boards")
-	public ResponseEntity<List<BoardResponse>> findAllBoards() {
-		List<BoardResponse> articles = boardService.findAll()
+	@GetMapping("/api/boards/{bgno}")
+	public ResponseEntity<List<BoardResponse>> findAllBoards(@PathVariable String bgno) {
+		List<BoardResponse> articles = boardService.findAllByBgno(bgno)
 				.stream()
-				.map(BoardResponse::new) // .map(x -> new ArticleResponse(x))
+				.map(BoardResponse::new)
 				.toList();
 
 		return ResponseEntity.ok()
 				.body(articles);
 	}
 
-	@GetMapping("/api/boards/{id}")
-	public ResponseEntity<BoardResponse> findBoard(@PathVariable long id) {
+	@GetMapping("/api/boards/{bgno}/{id}")
+	public ResponseEntity<BoardResponse> findBoard(@PathVariable String bgno, @PathVariable long id) {
 		Board article = boardService.findById(id);
 
 		return ResponseEntity.ok()
 				.body(new BoardResponse(article));
 	}
 
-	@DeleteMapping("/api/boards/{id}")
-	public ResponseEntity<Void> deleteBoard(@PathVariable long id) {
+	@DeleteMapping("/api/boards/{bgno}/{id}")
+	public ResponseEntity<Void> deleteBoard(@PathVariable String bgno, @PathVariable long id) {
 		boardService.delete(id);
 		return ResponseEntity.ok()
 				.build();
 	}
 
-	@PutMapping("/api/boards/{id}")
+	@PutMapping("/api/boards/{bgno}/{id}")
 	public ResponseEntity<Board> updateBoard(
+			@PathVariable String bgno,
 			@PathVariable long id,
 			@RequestBody UpdateBoardRequest request
 	) {

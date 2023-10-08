@@ -18,13 +18,20 @@ import lombok.RequiredArgsConstructor;
 public class BoardService {
 	private final BoardRepository boardRepository;
 
-	public Board save(AddBoardRequest request) {
+	public Board save(AddBoardRequest request, String bgno) {
+		request.setBgno(bgno);
 		return boardRepository.save(request.toEntity());
 	}
 
 	public List<Board> findAll() {
 		return boardRepository.findAll();
 	}
+
+
+	public List<Board> findAllByBgno(String bgno) {
+		return boardRepository.findAllByBgno(bgno);
+	}
+
 
 	public Board findById(long id) {
 		return boardRepository.findById(id)
