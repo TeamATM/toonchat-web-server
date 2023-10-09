@@ -5,6 +5,10 @@ plugins {
     id 'checkstyle'
 }
 
+jar {
+    enabled = false
+}
+
 group = 'com.webtoonchat'
 version = '0.1.1'
 
