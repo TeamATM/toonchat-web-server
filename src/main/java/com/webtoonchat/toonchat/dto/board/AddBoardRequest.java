@@ -15,6 +15,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AddBoardRequest {
+	private int writerId;
 	private String title;
 	private String content;
 	private String bgno;
@@ -23,6 +24,7 @@ public class AddBoardRequest {
 
 	public Board toEntity() {
 		return Board.builder()
+				.writerId(writerId)
 				.title(title)
 				.content(content)
 				.bgno(bgno)

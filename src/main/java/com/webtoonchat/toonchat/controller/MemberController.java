@@ -66,8 +66,10 @@ public class MemberController {
 				memberSignupDto.getEmail(), memberSignupDto.getProvider());
 		List<String> roles = foundMember.getRoles().stream().map(Role::getName).collect(Collectors.toList());
 
-		String accessToken = jwtTokenizer.createAccessToken(foundMember.getMemberId(), foundMember.getEmail(), roles);
-		String refreshToken = jwtTokenizer.createRefreshToken(foundMember.getMemberId(), foundMember.getEmail(), roles);
+		String accessToken = jwtTokenizer.createAccessToken(
+				foundMember.getProvider(), foundMember.getMemberId(), foundMember.getEmail(), roles);
+		String refreshToken = jwtTokenizer.createRefreshToken(
+				foundMember.getProvider(), foundMember.getMemberId(), foundMember.getEmail(), roles);
 
 		RefreshToken refreshTokenEntity = new RefreshToken();
 		refreshTokenEntity.setValue(refreshToken);
@@ -140,8 +142,10 @@ public class MemberController {
 		List<String> roles = member.getRoles().stream().map(Role::getName).collect(Collectors.toList());
 
 		// JWT토큰을 생성하였다. jwt라이브러리를 이용하여 생성.
-		String accessToken = jwtTokenizer.createAccessToken(member.getMemberId(), member.getEmail(), roles);
-		String refreshToken = jwtTokenizer.createRefreshToken(member.getMemberId(), member.getEmail(), roles);
+		String accessToken = jwtTokenizer.createAccessToken(
+				member.getProvider(), member.getMemberId(), member.getEmail(), roles);
+		String refreshToken = jwtTokenizer.createRefreshToken(
+				member.getProvider(), member.getMemberId(), member.getEmail(), roles);
 
 		/**
 		 * RefreshToken을 DB에 저장한다.
@@ -187,6 +191,7 @@ public class MemberController {
 				new IllegalArgumentException("Refresh token not found"));
 		Claims claims = jwtTokenizer.parseRefreshToken(refreshToken.getValue());
 
+		String provider = String.valueOf((String)claims.get("provider"));
 		Long userId = Long.valueOf((Integer) claims.get("userId"));
 
 		Member member = memberService.getMember(userId).orElseThrow(
@@ -198,7 +203,7 @@ public class MemberController {
 		/**
 		 * TO-Do : 프로필 url, provider response에 담기
 		 */
-		String accessToken = jwtTokenizer.createAccessToken(userId, email, roles);
+		String accessToken = jwtTokenizer.createAccessToken(provider, userId, email, roles);
 
 		MemberLoginResponseDto loginResponse = MemberLoginResponseDto.builder()
 				.accessToken(accessToken)
