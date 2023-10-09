@@ -26,6 +26,9 @@ public class Board {
 	@Column(name = "id", updatable = false)
 	private Long id;
 
+	@Column(name = "writer", nullable = false)
+	private int writerId;
+
 	@Column(name = "bgno", nullable = false)
 	private String bgno;
 
@@ -44,12 +47,14 @@ public class Board {
 	private LocalDateTime updatedAt;
 
 	@Builder // 빌더 패턴으로 객체 생성
-	public Board(String title, String content, String bgno, LocalDateTime createdAt, LocalDateTime updatedAt) {
+	public Board(
+			int writerId, String title, String content, String bgno, LocalDateTime createdAt, LocalDateTime updatedAt) {
 		this.title = title;
 		this.content = content;
 		this.bgno = bgno;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
+		this.writerId = writerId;
 	}
 
 	public void update(String title, String content) {
