@@ -8,7 +8,7 @@ import com.webtoonchat.toonchat.domain.board.Board;
 import com.webtoonchat.toonchat.dto.board.AddBoardRequest;
 import com.webtoonchat.toonchat.dto.board.UpdateBoardRequest;
 import com.webtoonchat.toonchat.repository.BoardRepository;
-
+import com.webtoonchat.toonchat.repository.MemberRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -17,9 +17,11 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class BoardService {
 	private final BoardRepository boardRepository;
+	private final MemberRepository memberRepository;
 
-	public Board save(AddBoardRequest request, String bgno) {
+	public Board save(AddBoardRequest request, String bgno, int userId) {
 		request.setBgno(bgno);
+		request.setWriterId(userId);
 		return boardRepository.save(request.toEntity());
 	}
 
@@ -51,3 +53,4 @@ public class BoardService {
 		return article;
 	}
 }
+

@@ -34,23 +34,24 @@ public class JwtTokenizer {
 	/**
 	 * AccessToken 생성
 	 */
-	public String createAccessToken(Long id, String email, List<String> roles) {
-		return createToken(id, email, roles, ACCESS_TOKEN_EXPIRE_COUNT, accessSecret);
+	public String createAccessToken(String provider, Long id, String email, List<String> roles) {
+		return createToken(provider, id, email, roles, ACCESS_TOKEN_EXPIRE_COUNT, accessSecret);
 	}
 
 	/**
 	 * RefreshToken 생성
 	 */
-	public String createRefreshToken(Long id, String email, List<String> roles) {
-		return createToken(id, email, roles, REFRESH_TOKEN_EXPIRE_COUNT, refreshSecret);
+	public String createRefreshToken(String provider, Long id, String email, List<String> roles) {
+		return createToken(provider, id, email, roles, REFRESH_TOKEN_EXPIRE_COUNT, refreshSecret);
 	}
 
-	private String createToken(Long id, String email, List<String> roles, Long expire, byte[] secretKey) {
+	private String createToken(
+			String provider, Long id, String email, List<String> roles, Long expire, byte[] secretKey) {
 		/**
 		 * TODO: subject를 userId로, claims에 email 추가.
 		 */
 		Claims claims = Jwts.claims().setSubject(id.toString());
-
+		claims.put("provider", provider);
 		claims.put("roles", roles);
 		claims.put("userId", id);
 		claims.put("email", email);
