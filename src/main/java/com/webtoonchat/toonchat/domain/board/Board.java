@@ -27,10 +27,13 @@ public class Board {
 	private Long id;
 
 	@Column(name = "writer", nullable = false)
-	private int writerId;
+	private String writer;
 
-	@Column(name = "bgno", nullable = false)
-	private String bgno;
+	@Column(name = "writer_id", nullable = false)
+	private Long writerId;
+
+	@Column(name = "character_id", nullable = false)
+	private String characterId;
 
 	@Column(name = "title", nullable = false)
 	private String title;
@@ -48,17 +51,20 @@ public class Board {
 
 	@Builder // 빌더 패턴으로 객체 생성
 	public Board(
-			int writerId, String title, String content, String bgno, LocalDateTime createdAt, LocalDateTime updatedAt) {
+			String writer, String title, String content, Long writerId,
+			String characterId, LocalDateTime createdAt, LocalDateTime updatedAt) {
 		this.title = title;
 		this.content = content;
-		this.bgno = bgno;
+		this.characterId = characterId;
 		this.createdAt = createdAt;
-		this.updatedAt = updatedAt;
+		this.updatedAt = createdAt;
+		this.writer = writer;
 		this.writerId = writerId;
 	}
 
 	public void update(String title, String content) {
 		this.title = title;
 		this.content = content;
+		this.updatedAt = LocalDateTime.now();
 	}
 }

@@ -9,6 +9,6 @@ import com.webtoonchat.toonchat.domain.board.Board;
 
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
-	public List<Board> findAllByBgno(String bgno);
+	public List<Board> findAllByCharacterId(String characterId);
 
 }
