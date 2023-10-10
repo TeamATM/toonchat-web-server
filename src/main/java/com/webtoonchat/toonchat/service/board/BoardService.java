@@ -19,8 +19,9 @@ public class BoardService {
 	private final BoardRepository boardRepository;
 	private final MemberRepository memberRepository;
 
-	public Board save(AddBoardRequest request, String bgno, int userId) {
-		request.setBgno(bgno);
+	public Board save(AddBoardRequest request, String characterId, String userName, Long userId) {
+		request.setCharacterId(characterId);
+		request.setWriter(userName);
 		request.setWriterId(userId);
 		return boardRepository.save(request.toEntity());
 	}
@@ -30,8 +31,8 @@ public class BoardService {
 	}
 
 
-	public List<Board> findAllByBgno(String bgno) {
-		return boardRepository.findAllByBgno(bgno);
+	public List<Board> findAllByCharacterId(String characterId) {
+		return boardRepository.findAllByCharacterId(characterId);
 	}
 
 
