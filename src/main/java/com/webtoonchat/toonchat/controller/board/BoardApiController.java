@@ -14,11 +14,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.webtoonchat.toonchat.domain.Member;
 import com.webtoonchat.toonchat.domain.board.Board;
 import com.webtoonchat.toonchat.dto.board.AddBoardRequest;
 import com.webtoonchat.toonchat.dto.board.BoardResponse;
 import com.webtoonchat.toonchat.dto.board.UpdateBoardRequest;
 import com.webtoonchat.toonchat.security.jwt.util.JwtTokenizer;
+import com.webtoonchat.toonchat.service.MemberService;
 import com.webtoonchat.toonchat.service.board.BoardService;
 
 import io.jsonwebtoken.Claims;
@@ -32,18 +34,27 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 public class BoardApiController {
 	private final BoardService boardService;
+	private final MemberService memberService;
 	private final JwtTokenizer jwtTokenizer;
 
 	@Value("${jwt.secretKey}")
 	private String secretKey;
+
+	@GetMapping("/api/boards")
+	public ResponseEntity<Board> showBoards() {
+
+		return ResponseEntity.status(HttpStatus.OK)
+				.body();
+	}
 
 	@PostMapping("/api/boards/{characterId}")
 	public ResponseEntity<Board> addBoard(
 			@PathVariable String characterId,
 			@RequestBody AddBoardRequest request, HttpServletRequest httpServletRequest) {
 		Claims claims = extracted(httpServletRequest);
-		Integer userid = (Integer) claims.get("userId");
-		Board savedArticle = boardService.save(request, characterId, userid);
+		Long userid = (Long) claims.get("userId");
+		Member member = memberService.findByMemberId(userid);
+		Board savedArticle = boardService.save(request, characterId, member.getName(), userid);
 		return ResponseEntity.status(HttpStatus.CREATED)
 				.body(savedArticle);
 	}
@@ -51,7 +62,7 @@ public class BoardApiController {
 	@GetMapping("/api/boards/{characterId}")
 	public ResponseEntity<List<BoardResponse>> findAllBoards(
 			@PathVariable String characterId, HttpServletRequest httpServletRequest) {
-		List<BoardResponse> articles = boardService.findAllByBgno(characterId)
+		List<BoardResponse> articles = boardService.findAllByCharacterId(characterId)
 				.stream()
 				.map(BoardResponse::new)
 				.toList();

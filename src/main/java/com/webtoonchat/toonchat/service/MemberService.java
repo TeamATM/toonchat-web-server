@@ -24,6 +24,12 @@ public class MemberService {
 	}
 
 	@Transactional(readOnly = true)
+	public Member findByMemberId(Long memberId) {
+		return memberRepository.findByMemberId(memberId).orElseThrow(
+				() -> new IllegalArgumentException("해당 사용자가 없습니다."));
+	}
+
+	@Transactional(readOnly = true)
 	public Member findByEmailAndProvider(String email, String provider) {
 		return memberRepository.findByEmailAndProvider(email, provider)
 				.orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다."));
