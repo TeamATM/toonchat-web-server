@@ -15,19 +15,21 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AddBoardRequest {
-	private int writerId;
+	private String writer;
+	private Long writerId;
 	private String title;
 	private String content;
-	private String bgno;
+	private String characterId;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 
 	public Board toEntity() {
 		return Board.builder()
 				.writerId(writerId)
+				.writer(writer)
 				.title(title)
 				.content(content)
-				.bgno(bgno)
+				.characterId(characterId)
 				.createdAt(createdAt)
 				.updatedAt(updatedAt)
 				.build();
