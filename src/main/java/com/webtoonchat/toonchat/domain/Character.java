@@ -15,9 +15,12 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Character {
 	@Id
-	@Column(name = "character_id")
+	@Column
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long characterId;
+	private Long id;
+
+	@Column
+	private String characterId;
 
 	@Column
 	private String profileUrl;
