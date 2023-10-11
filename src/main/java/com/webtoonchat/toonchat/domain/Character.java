@@ -32,5 +32,8 @@ public class Character {
 	private String stateMessage;
 
 	@Column
+	private String hashtags;
+
+	@Column
 	private String name;
 }
