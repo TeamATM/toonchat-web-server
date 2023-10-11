@@ -1,7 +1,12 @@
 package com.webtoonchat.toonchat.service;
 
+
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
+import com.webtoonchat.toonchat.domain.Characters;
 import com.webtoonchat.toonchat.repository.CharacterRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -10,5 +15,17 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CharacterService {
 	private final CharacterRepository characterRepository;
+
+	public Characters createCharacter(Characters characters) {
+		return characterRepository.save(characters);
+	}
+
+	public List<Characters> getAllCharacters() {
+		return characterRepository.findAll();
+	}
+
+	public Optional<Characters> getCharacterByCharacterId(String id) {
+		return characterRepository.findByCharacterId(id);
+	}
 
 }

@@ -5,13 +5,13 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.webtoonchat.toonchat.domain.Character;
+import com.webtoonchat.toonchat.domain.Characters;
 
 
-public interface CharacterRepository extends JpaRepository<Character, Long> {
-	public List<Character> findAll();
+public interface CharacterRepository extends JpaRepository<Characters, Long> {
+	List<Characters> findAll();
 
-	public Optional<Character> findByCharacterId(String characterId);
+	Optional<Characters> findByCharacterId(String characterId);
 
 
 }
