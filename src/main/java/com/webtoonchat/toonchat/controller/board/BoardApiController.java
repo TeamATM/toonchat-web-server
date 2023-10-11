@@ -6,6 +6,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,15 +46,16 @@ public class BoardApiController {
 	public ResponseEntity<Board> showBoards() {
 
 		return ResponseEntity.status(HttpStatus.OK)
-				.body();
+				.body(null);
 	}
 
 	@PostMapping("/api/boards/{characterId}")
 	public ResponseEntity<Board> addBoard(
 			@PathVariable String characterId,
 			@RequestBody AddBoardRequest request, HttpServletRequest httpServletRequest) {
-		Claims claims = extracted(httpServletRequest);
-		Long userid = (Long) claims.get("userId");
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Claims claims = (Claims) principal;
+		Long userid = ((Integer) claims.get("userId")).longValue();
 		Member member = memberService.findByMemberId(userid);
 		Board savedArticle = boardService.save(request, characterId, member.getName(), userid);
 		return ResponseEntity.status(HttpStatus.CREATED)
@@ -83,8 +86,10 @@ public class BoardApiController {
 	@DeleteMapping("/api/boards/{characterId}/{id}")
 	public ResponseEntity<Void> deleteBoard(
 			@PathVariable String characterId, @PathVariable long id, HttpServletRequest httpServletRequest) {
-		Claims claims = extracted(httpServletRequest);
-		if (boardService.findById(id).getWriterId() != (int)claims.get("userId")) {
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Claims claims = (Claims) principal;
+		Long userid = ((Integer) claims.get("userId")).longValue();
+		if (boardService.findById(id).getWriterId() != userid) {
 			log.error("작성자가 아닌 글 삭제 요청");
 			return ResponseEntity.badRequest()
 					.build();
@@ -101,8 +106,10 @@ public class BoardApiController {
 			@RequestBody UpdateBoardRequest request,
 			HttpServletRequest httpServletRequest
 	) {
-		Claims claims = extracted(httpServletRequest);
-		if (boardService.findById(id).getWriterId() != (int)claims.get("userId")) {
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Claims claims = (Claims) principal;
+		Long userid = ((Integer) claims.get("userId")).longValue();
+		if (boardService.findById(id).getWriterId() != userid) {
 			log.error("작성자가 아닌 글 수정 요청");
 			return ResponseEntity.badRequest()
 					.build();
@@ -113,10 +120,10 @@ public class BoardApiController {
 				.body(updateArticle);
 	}
 
-	private Claims extracted(HttpServletRequest httpServletRequest) {
-		String authorization = httpServletRequest.getHeader("Authorization");
-		String[] arr = authorization.split(" ");
-		log.info(arr[1]);
-		return jwtTokenizer.parseToken(arr[1], secretKey.getBytes(StandardCharsets.UTF_8));
-	}
+//	private Claims extracted(HttpServletRequest httpServletRequest) {
+//		String authorization = httpServletRequest.getHeader("Authorization");
+//		String[] arr = authorization.split(" ");
+//		log.info(arr[1]);
+//		return jwtTokenizer.parseToken(arr[1], secretKey.getBytes(StandardCharsets.UTF_8));
+//	}
 }
