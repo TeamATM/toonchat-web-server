@@ -1,4 +1,4 @@
-package com.webtoonchat.toonchat.dto;
+package com.webtoonchat.toonchat.dto.member;
 
 import java.time.LocalDateTime;
 
