@@ -33,7 +33,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 		String email = claims.getSubject();
 		List<GrantedAuthority> authorities = getGrantedAuthorities(claims);
 
-		return new JwtAuthenticationToken(authorities, email, null);
+		return new JwtAuthenticationToken(authorities, claims, null);
 	}
 
 	private List<GrantedAuthority> getGrantedAuthorities(Claims claims) {
