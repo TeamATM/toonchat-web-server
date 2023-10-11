@@ -10,7 +10,8 @@ import lombok.Getter;
 @Getter
 public class BoardResponse {
 	private final Long id;
-	private final Long writer;
+	private final Long writerId;
+	private final String writerName;
 	private final String title;
 	private final String content;
 	private final String characterId;
@@ -19,7 +20,8 @@ public class BoardResponse {
 
 	public BoardResponse(Board article) {
 		this.id = article.getId();
-		this.writer = article.getWriterId();
+		this.writerId = article.getWriterId();
+		this.writerName = article.getWriter();
 		this.title = article.getTitle();
 		this.content = article.getContent();
 		this.createdAt = article.getCreatedAt();
