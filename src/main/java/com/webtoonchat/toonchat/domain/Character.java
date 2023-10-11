@@ -5,10 +5,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
+@Table(name = "characters")
 @NoArgsConstructor
 @Entity
 public class Character {
@@ -23,9 +25,9 @@ public class Character {
 	@Column
 	private String backgroundUrl;
 
-	@Column(length = 255)
+	@Column
 	private String stateMessage;
 
-	@Column(length = 50)
+	@Column
 	private String name;
 }

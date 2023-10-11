@@ -13,7 +13,7 @@ public class BoardResponse {
 	private final Long writer;
 	private final String title;
 	private final String content;
-	private final String bgno;
+	private final String characterId;
 	private final LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 
@@ -23,6 +23,6 @@ public class BoardResponse {
 		this.title = article.getTitle();
 		this.content = article.getContent();
 		this.createdAt = article.getCreatedAt();
-		this.bgno = article.getBgno();
+		this.characterId = article.getCharacterId();
 	}
 }
