@@ -24,6 +24,7 @@ import com.webtoonchat.toonchat.service.MemberService;
 import com.webtoonchat.toonchat.service.board.BoardService;
 
 import io.jsonwebtoken.Claims;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,13 +40,6 @@ public class BoardApiController {
 
 	@Value("${jwt.secretKey}")
 	private String secretKey;
-
-	@GetMapping("/api/boards")
-	public ResponseEntity<Board> showBoards() {
-
-		return ResponseEntity.status(HttpStatus.OK)
-				.body(null);
-	}
 
 	@PostMapping("/api/boards/{characterId}")
 	public ResponseEntity<Board> addBoard(
