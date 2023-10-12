@@ -40,7 +40,7 @@ public class BoardApiController {
 
 	@Value("${jwt.secretKey}")
 	private String secretKey;
-
+	@Operation(description = "특정 캐릭터 게시판 게시글 작성")
 	@PostMapping("/api/boards/{characterId}")
 	public ResponseEntity<Board> addBoard(
 			@PathVariable String characterId,
@@ -54,6 +54,7 @@ public class BoardApiController {
 				.body(savedArticle);
 	}
 
+	@Operation(description = "특정 캐릭터 게시판 모든 게시글 조회")
 	@GetMapping("/api/boards/{characterId}")
 	public ResponseEntity<List<BoardResponse>> findAllBoards(
 			@PathVariable String characterId, HttpServletRequest httpServletRequest) {
@@ -66,6 +67,7 @@ public class BoardApiController {
 				.body(articles);
 	}
 
+	@Operation(description = "특정 캐릭터 게시판 특정 게시글 조회")
 	@GetMapping("/api/boards/{characterId}/{id}")
 	public ResponseEntity<BoardResponse> findBoard(
 			@PathVariable String characterId, @PathVariable long id, HttpServletRequest httpServletRequest) {
@@ -75,6 +77,7 @@ public class BoardApiController {
 				.body(new BoardResponse(article));
 	}
 
+	@Operation(description = "특정 캐릭터 게시판 특정 게시글 삭제")
 	@DeleteMapping("/api/boards/{characterId}/{id}")
 	public ResponseEntity<Void> deleteBoard(
 			@PathVariable String characterId, @PathVariable long id, HttpServletRequest httpServletRequest) {
@@ -91,6 +94,7 @@ public class BoardApiController {
 				.build();
 	}
 
+	@Operation(description = "특정 캐릭터 게시판 특정 게시글 수정")
 	@PutMapping("/api/boards/{characterId}/{id}")
 	public ResponseEntity<Board> updateBoard(
 			@PathVariable String characterId,

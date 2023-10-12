@@ -29,6 +29,7 @@ import com.webtoonchat.toonchat.service.MemberService;
 import com.webtoonchat.toonchat.service.RefreshTokenService;
 
 import io.jsonwebtoken.Claims;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -44,6 +45,7 @@ public class MemberController {
 	private final RefreshTokenService refreshTokenService;
 	private final PasswordEncoder passwordEncoder;
 
+	@Operation(description = "소셜 로그인")
 	@PostMapping("/social-login")
 	public ResponseEntity socialSignupOrLogin(
 			@RequestBody @Valid MemberSignupDto memberSignupDto, BindingResult bindingResult) {
@@ -87,6 +89,7 @@ public class MemberController {
 		return new ResponseEntity(loginResponse, HttpStatus.OK);
 	}
 
+	@Operation(description = "일반 회원가입")
 	@PostMapping("/signup")
 	public ResponseEntity signup(@RequestBody @Valid MemberSignupDto memberSignupDto, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
@@ -122,6 +125,7 @@ public class MemberController {
 		return new ResponseEntity(memberSignupResponse, HttpStatus.CREATED);
 	}
 
+	@Operation(description = "일반 로그인")
 	@PostMapping("/login")
 	public ResponseEntity login(@RequestBody @Valid MemberLoginDto loginDto, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
@@ -170,6 +174,7 @@ public class MemberController {
 		return new ResponseEntity(loginResponse, HttpStatus.OK);
 	}
 
+	@Operation(description = "로그아웃")
 	@DeleteMapping("/logout")
 	public ResponseEntity logout(@RequestBody RefreshTokenDto refreshTokenDto) {
 		/**
@@ -184,6 +189,7 @@ public class MemberController {
 	2. RefreshToken이 유효한지 체크한다.
 	3. AccessToken을 발급하여 기존 RefreshToken과 함께 응답한다.
 	 */
+	@Operation(description = "access token 재발급")
 	@PostMapping("/refreshToken")
 	public ResponseEntity requestRefresh(@RequestBody RefreshTokenDto refreshTokenDto) {
 		RefreshToken refreshToken = refreshTokenService.findRefreshToken(
