@@ -87,7 +87,7 @@ public class BoardApiController {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		Claims claims = (Claims) principal;
 		Long userid = ((Integer) claims.get("userId")).longValue();
-		if (boardService.findById(id).getWriterId() != userid) {
+		if (!boardService.findById(id).getWriterId().equals(userid)) {
 			log.error("작성자가 아닌 글 삭제 요청");
 			return ResponseEntity.badRequest()
 					.build();
@@ -107,7 +107,7 @@ public class BoardApiController {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		Claims claims = (Claims) principal;
 		Long userid = ((Integer) claims.get("userId")).longValue();
-		if (boardService.findById(id).getWriterId() != userid) {
+		if (!boardService.findById(id).getWriterId().equals(userid)) {
 			log.error("작성자가 아닌 글 수정 요청");
 			return ResponseEntity.badRequest()
 					.build();
@@ -117,11 +117,4 @@ public class BoardApiController {
 		return ResponseEntity.ok()
 				.body(updateArticle);
 	}
-
-//	private Claims extracted(HttpServletRequest httpServletRequest) {
-//		String authorization = httpServletRequest.getHeader("Authorization");
-//		String[] arr = authorization.split(" ");
-//		log.info(arr[1]);
-//		return jwtTokenizer.parseToken(arr[1], secretKey.getBytes(StandardCharsets.UTF_8));
-//	}
 }
