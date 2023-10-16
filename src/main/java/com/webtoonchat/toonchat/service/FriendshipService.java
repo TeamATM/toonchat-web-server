@@ -8,14 +8,16 @@ import org.springframework.stereotype.Service;
 import com.webtoonchat.toonchat.domain.Friendship;
 import com.webtoonchat.toonchat.repository.FriendshipRepository;
 
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @Service
 public class FriendshipService {
 
 	private final FriendshipRepository friendshipRepository;
 
-	public FriendshipService(FriendshipRepository friendshipRepository) {
-		this.friendshipRepository = friendshipRepository;
+	public List<Friendship> getFriendshipsByMemberId(Long memberId) {
+		return friendshipRepository.findByMemberMemberId(memberId);
 	}
 
 	public List<Friendship> getAll() {
@@ -35,4 +37,6 @@ public class FriendshipService {
 			friendshipRepository.deleteById(id);
 		}
 	}
+
+
 }
