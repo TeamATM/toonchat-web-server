@@ -36,10 +36,6 @@ import lombok.extern.slf4j.Slf4j;
 public class BoardApiController {
 	private final BoardService boardService;
 	private final MemberService memberService;
-	private final JwtTokenizer jwtTokenizer;
-
-	@Value("${jwt.secretKey}")
-	private String secretKey;
 	@Operation(description = "특정 캐릭터 게시판 게시글 작성")
 	@PostMapping("/api/boards/{characterId}")
 	public ResponseEntity<Board> addBoard(
