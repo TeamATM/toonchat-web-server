@@ -40,9 +40,7 @@ public class CharacterController {
 	@Operation(description = "characterId로 캐릭터 조회")
 	@GetMapping("/{id}")
 	public ResponseEntity<Characters> getCharacterByCharacterId(@PathVariable String id) {
-		return characterService.getCharacterByCharacterId(id)
-				.map(ResponseEntity::ok)
-				.orElse(ResponseEntity.notFound().build());
+		return ResponseEntity.ok(characterService.getCharacterByCharacterId(id));
 
 	}
 }
