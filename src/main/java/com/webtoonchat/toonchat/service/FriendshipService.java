@@ -3,9 +3,13 @@ package com.webtoonchat.toonchat.service;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.stereotype.Service;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.webtoonchat.toonchat.domain.Characters;
 import com.webtoonchat.toonchat.domain.Friendship;
+import com.webtoonchat.toonchat.domain.Member;
 import com.webtoonchat.toonchat.repository.FriendshipRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -36,6 +40,16 @@ public class FriendshipService {
 		if (friendshipRepository.existsById(id)) {
 			friendshipRepository.deleteById(id);
 		}
+	}
+
+	@Transactional
+	public Friendship createFriendship(Member member, Characters charac) {
+		// 친구 관계 생성
+		Friendship friendship = new Friendship();
+		friendship.setMember(member);
+		friendship.setCharacters(charac);
+
+		return friendshipRepository.save(friendship);
 	}
 
 

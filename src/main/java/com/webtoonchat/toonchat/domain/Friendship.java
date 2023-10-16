@@ -28,5 +28,5 @@ public class Friendship {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "character_id")
-	private Characters character;
+	private Characters characters;
 }
