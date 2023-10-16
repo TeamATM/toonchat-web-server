@@ -46,6 +46,6 @@ public class Characters {
 	@Column
 	private String name;
 
-	@OneToMany(mappedBy = "character") // 수정된 부분
+	@OneToMany(mappedBy = "characters") // 수정된 부분
 	private List<Friendship> friendships; // 수정된 부분
 }
