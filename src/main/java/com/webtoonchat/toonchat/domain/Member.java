@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -59,6 +60,13 @@ public class Member {
 	)
 	private Set<Role> roles = new HashSet<>();
 
+	@ManyToMany(cascade = { CascadeType.ALL })
+	@JoinTable(
+			name = "friendship",
+			joinColumns = { @JoinColumn(name = "member_id") },
+			inverseJoinColumns = { @JoinColumn(name = "character_id") }
+	)
+	private Set<Characters> friends;
 	public void addRole(Role role) {
 		roles.add(role);
 	}
