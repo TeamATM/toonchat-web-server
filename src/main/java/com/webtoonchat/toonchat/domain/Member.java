@@ -2,11 +2,11 @@ package com.webtoonchat.toonchat.domain;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,6 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,9 +33,7 @@ public class Member {
 	@Column(name = "member_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY) // userId는 자동으로 생성
 	private Long memberId;
-	/**
-	 * TO-Do : provider 컬럼 추가, 프로필 url column 추가
-	 */
+
 	@Column
 	private String provider;
 
@@ -60,13 +59,8 @@ public class Member {
 	)
 	private Set<Role> roles = new HashSet<>();
 
-	@ManyToMany(cascade = { CascadeType.ALL })
-	@JoinTable(
-			name = "friendship",
-			joinColumns = { @JoinColumn(name = "member_id") },
-			inverseJoinColumns = { @JoinColumn(name = "character_id") }
-	)
-	private Set<Characters> friends;
+	@OneToMany(mappedBy = "member")
+	private List<Friendship> friendships;  // 수정된 부분
 	public void addRole(Role role) {
 		roles.add(role);
 	}
