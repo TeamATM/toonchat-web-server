@@ -17,11 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.webtoonchat.toonchat.domain.Characters;
 import com.webtoonchat.toonchat.domain.Friendship;
+import com.webtoonchat.toonchat.domain.Member;
 import com.webtoonchat.toonchat.service.CharacterService;
 import com.webtoonchat.toonchat.service.FriendshipService;
 import com.webtoonchat.toonchat.service.MemberService;
 
 import io.jsonwebtoken.Claims;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 
 
@@ -49,7 +51,7 @@ public class FriendshipController {
 		List<String> characterIds = new ArrayList<>();
 
 		for (Friendship friendship : friendships) {
-			Characters character = friendship.getCharacter();
+			Characters character = friendship.getCharacters();
 			if (character != null) {
 				characterIds.add(character.getCharacterId());
 			}
@@ -59,8 +61,8 @@ public class FriendshipController {
 		List<Characters> charactersList = new ArrayList<>();
 
 		for (String characterId : characterIds) {
-			Optional<Characters> optionalCharacter = characterService.getCharacterByCharacterId(characterId);
-			optionalCharacter.ifPresent(charactersList::add);
+			Characters character = characterService.getCharacterByCharacterId(characterId);
+			charactersList.add(character);
 		}
 
 		return ResponseEntity.ok(charactersList);
@@ -78,10 +80,18 @@ public class FriendshipController {
 		}
 	}
 
-	@PostMapping("")
-	public ResponseEntity create(@RequestBody Friendship friendship) {
-		Friendship createdFriendship = friendshipService.create(friendship);
-		return new ResponseEntity(createdFriendship, HttpStatus.CREATED);
+	@Operation(description = "새로운 친구관계 생성")
+	@PostMapping("/{characterId}")
+	public ResponseEntity createFriendship(@PathVariable String characterId) {
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Claims claims = (Claims) principal;
+		Long userid = ((Integer) claims.get("userId")).longValue();
+		Member member = memberService.findByMemberId(userid);
+		Characters charac = characterService.getCharacterByCharacterId(characterId);
+
+		friendshipService.createFriendship(member, charac);
+
+		return new ResponseEntity(HttpStatus.CREATED);
 	}
 
 	@DeleteMapping("/{id}")
