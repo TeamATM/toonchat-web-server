@@ -1,5 +1,6 @@
 package com.webtoonchat.toonchat.domain;
 
+import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.Column;
@@ -8,6 +9,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,7 +28,7 @@ public class Characters {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column
+	@Column(name = "character_id")
 	private String characterId;
 
 	@Column
@@ -43,6 +46,6 @@ public class Characters {
 	@Column
 	private String name;
 
-	@ManyToMany(mappedBy = "friends")
-	private Set<Member> members;
+	@OneToMany(mappedBy = "character") // 수정된 부분
+	private List<Friendship> friendships; // 수정된 부분
 }
