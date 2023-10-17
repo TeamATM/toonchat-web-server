@@ -1,14 +1,10 @@
 package com.webtoonchat.toonchat.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,30 +18,34 @@ import lombok.Setter;
 @Entity
 public class Character {
 	@Id
-	@Column(name = "character_id")
+	@Column
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long characterId;
+	private Long id;
 
 	@Column
-	private String profileUrl;
+	private String profileImageUrl;
 
 	@Column
-	private String backgroundUrl;
+	private String backgroundImageUrl;
 
 	@Column
 	private String stateMessage;
 
 	@Column
-	private String hashtags;
+	private String hashTag;
 
 	@Column
 	private String name;
 
-	public Character(String name, String profileUrl, String backgroundUrl, String stateMessage, String hashtags) {
+	public Character(String name,
+		String profileImageUrl,
+		String backgroundImageUrl,
+		String stateMessage,
+		String hashTag) {
 		this.name = name;
-		this.profileUrl = profileUrl;
-		this.backgroundUrl = backgroundUrl;
+		this.profileImageUrl = profileImageUrl;
+		this.backgroundImageUrl = backgroundImageUrl;
 		this.stateMessage = stateMessage;
-		this.hashtags = hashtags;
+		this.hashTag = hashTag;
 	}
 }

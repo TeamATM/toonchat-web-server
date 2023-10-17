@@ -1,13 +1,12 @@
 package com.webtoonchat.toonchat.domain;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.hibernate.annotations.CreationTimestamp;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,9 +31,9 @@ import lombok.ToString;
 @Getter
 public class Member {
 	@Id // 이 필드가 Table의 PK.
-	@Column(name = "member_id")
+	@Column
 	@GeneratedValue(strategy = GenerationType.IDENTITY) // userId는 자동으로 생성
-	private Long memberId;
+	private Long id;
 
 	@Column
 	private String provider;
@@ -65,7 +64,5 @@ public class Member {
 	}
 
 	@OneToMany(mappedBy = "member")
-	@JsonManagedReference
-	private Set<Friendship> friendships = new HashSet<>();  // 수정된 부분
-
+	private List<Friendship> friendships = new ArrayList<>();  // 수정된 부분
 }
