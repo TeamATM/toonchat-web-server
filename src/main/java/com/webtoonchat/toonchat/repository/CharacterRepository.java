@@ -11,7 +11,7 @@ import com.webtoonchat.toonchat.domain.Characters;
 public interface CharacterRepository extends JpaRepository<Characters, Long> {
 	List<Characters> findAll();
 
-	Characters findByCharacterId(String characterId);
+	Characters findByCode(String code);
 
 
 }

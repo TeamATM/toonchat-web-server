@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -53,7 +52,7 @@ public class FriendshipController {
 		for (Friendship friendship : friendships) {
 			Characters character = friendship.getCharacters();
 			if (character != null) {
-				characterIds.add(character.getCharacterId());
+				characterIds.add(character.getCode());
 			}
 		}
 
@@ -61,7 +60,7 @@ public class FriendshipController {
 		List<Characters> charactersList = new ArrayList<>();
 
 		for (String characterId : characterIds) {
-			Characters character = characterService.getCharacterByCharacterId(characterId);
+			Characters character = characterService.getCharacterByCode(characterId);
 			charactersList.add(character);
 		}
 
@@ -81,13 +80,13 @@ public class FriendshipController {
 	}
 
 	@Operation(description = "새로운 친구관계 생성")
-	@PostMapping("/{characterId}")
-	public ResponseEntity createFriendship(@PathVariable String characterId) {
+	@PostMapping("/{code}")
+	public ResponseEntity createFriendship(@PathVariable String code) {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		Claims claims = (Claims) principal;
 		Long userid = ((Integer) claims.get("userId")).longValue();
 		Member member = memberService.findByMemberId(userid);
-		Characters charac = characterService.getCharacterByCharacterId(characterId);
+		Characters charac = characterService.getCharacterByCode(code);
 
 		friendshipService.createFriendship(member, charac);
 
