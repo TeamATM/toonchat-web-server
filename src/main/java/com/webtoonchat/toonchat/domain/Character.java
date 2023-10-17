@@ -1,9 +1,7 @@
 package com.webtoonchat.toonchat.domain;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,17 +17,14 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Table(name = "characters")
+@Table(name = "\"character\"")
 @NoArgsConstructor
 @Entity
-public class Characters {
+public class Character {
 	@Id
-	@Column
+	@Column(name = "character_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-
-	@Column
-	private String code;
+	private Long characterId;
 
 	@Column
 	private String profileUrl;
@@ -46,7 +41,11 @@ public class Characters {
 	@Column
 	private String name;
 
-	@JsonManagedReference
-	@OneToMany(mappedBy = "characters") // 수정된 부분
-	private Set<Friendship> friendships = new HashSet<>(); // 수정된 부분
+	public Character(String name, String profileUrl, String backgroundUrl, String stateMessage, String hashtags) {
+		this.name = name;
+		this.profileUrl = profileUrl;
+		this.backgroundUrl = backgroundUrl;
+		this.stateMessage = stateMessage;
+		this.hashtags = hashtags;
+	}
 }

@@ -2,11 +2,11 @@ package com.webtoonchat.toonchat.service;
 
 
 import java.util.List;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 
 import org.springframework.stereotype.Service;
 
-import com.webtoonchat.toonchat.domain.Characters;
+import com.webtoonchat.toonchat.domain.Character;
 import com.webtoonchat.toonchat.repository.CharacterRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -16,16 +16,16 @@ import lombok.RequiredArgsConstructor;
 public class CharacterService {
 	private final CharacterRepository characterRepository;
 
-	public Characters createCharacter(Characters characters) {
-		return characterRepository.save(characters);
+	public Character createCharacter(Character character) {
+		return characterRepository.save(character);
 	}
 
-	public List<Characters> getAllCharacters() {
+	public List<Character> getAllCharacters() {
 		return characterRepository.findAll();
 	}
 
-	public Characters getCharacterByCode(String code) {
-		return characterRepository.findByCode(code);
+	public Character getCharacterById(Long characterId) throws NoSuchElementException {
+		return characterRepository.findById(characterId).orElseThrow(NoSuchElementException::new);
 	}
 
 }
