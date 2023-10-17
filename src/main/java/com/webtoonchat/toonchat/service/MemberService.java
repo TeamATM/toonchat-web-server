@@ -43,8 +43,7 @@ public class MemberService {
 		return saveMember;
 	}
 
-	@Transactional(readOnly = true)
-	public Optional<Member> getMember(Long memberId) {
-		return memberRepository.findById(memberId);
+	public Member getMemberReference(Long memberId) {
+		return memberRepository.getReferenceById(memberId);
 	}
 }
