@@ -19,6 +19,7 @@ import com.webtoonchat.toonchat.domain.board.Board;
 import com.webtoonchat.toonchat.dto.board.AddBoardRequest;
 import com.webtoonchat.toonchat.dto.board.BoardResponse;
 import com.webtoonchat.toonchat.dto.board.UpdateBoardRequest;
+import com.webtoonchat.toonchat.resolver.annotation.Login;
 import com.webtoonchat.toonchat.security.jwt.util.JwtTokenizer;
 import com.webtoonchat.toonchat.service.MemberService;
 import com.webtoonchat.toonchat.service.board.BoardService;
@@ -38,9 +39,9 @@ public class BoardApiController {
 	private final MemberService memberService;
 	@Operation(description = "특정 캐릭터 게시판 게시글 작성")
 	@PostMapping("/api/boards/{characterId}")
-	public ResponseEntity<Board> addBoard(@PathVariable Long characterId, @RequestBody AddBoardRequest request) {
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		Claims claims = (Claims) principal;
+	public ResponseEntity<Board> addBoard(@PathVariable Long characterId,
+		@RequestBody AddBoardRequest request,
+		@Login Claims claims) {
 		Long userid = ((Integer) claims.get("userId")).longValue();
 		Member member = memberService.findByMemberId(userid);
 		Board savedArticle = boardService.save(request, characterId, member.getName(), userid);
@@ -71,9 +72,7 @@ public class BoardApiController {
 
 	@Operation(description = "특정 캐릭터 게시판 특정 게시글 삭제")
 	@DeleteMapping("/api/boards/{characterId}/{id}")
-	public ResponseEntity<Void> deleteBoard(@PathVariable long id) {
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		Claims claims = (Claims) principal;
+	public ResponseEntity<Void> deleteBoard(@PathVariable long id, @Login Claims claims) {
 		Long userid = ((Integer) claims.get("userId")).longValue();
 		if (!boardService.findById(id).getWriterId().equals(userid)) {
 			log.error("작성자가 아닌 글 삭제 요청");
@@ -88,11 +87,10 @@ public class BoardApiController {
 	@Operation(description = "특정 캐릭터 게시판 특정 게시글 수정")
 	@PutMapping("/api/boards/{characterId}/{id}")
 	public ResponseEntity<Board> updateBoard(
-			@PathVariable long id,
-			@RequestBody UpdateBoardRequest request
+		@PathVariable long id,
+		@RequestBody UpdateBoardRequest request,
+		@Login Claims claims
 	) {
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		Claims claims = (Claims) principal;
 		Long userid = ((Integer) claims.get("userId")).longValue();
 		if (!boardService.findById(id).getWriterId().equals(userid)) {
 			log.error("작성자가 아닌 글 수정 요청");

@@ -1,10 +1,15 @@
 package com.webtoonchat.toonchat.config;
 
+import java.util.List;
+
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import com.webtoonchat.toonchat.resolver.LoginArgumentResolver;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
@@ -31,4 +36,8 @@ public class WebConfig implements WebMvcConfigurer {
 				.allowCredentials(true);
 	}
 
+	@Override
+	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+		resolvers.add(new LoginArgumentResolver());
+	}
 }
