@@ -12,10 +12,4 @@ public class CharacterRegisterDto {
 	@NotBlank
 	private String stateMessage;
 	private String hashtags;
-	private String profileUrl;
-	private String backgroundUrl;
-
-	public Character toEntity() {
-		return new Character(name, profileUrl, backgroundUrl, stateMessage, hashtags);
-	}
 }

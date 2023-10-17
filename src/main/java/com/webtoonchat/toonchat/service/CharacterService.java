@@ -28,4 +28,12 @@ public class CharacterService {
 		return characterRepository.findById(characterId)
 			.orElseThrow(() -> new NoSuchElementException("캐릭터가 존재하지 않습니다."));
 	}
+
+	public boolean isCharacterExist(Long characterId) {
+		if (characterId == null || characterId < 0) {
+			return false;
+		}
+
+		return characterRepository.existsById(characterId);
+	}
 }

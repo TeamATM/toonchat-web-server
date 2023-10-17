@@ -3,6 +3,7 @@ package com.webtoonchat.toonchat.controller;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +11,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.webtoonchat.toonchat.controller.dto.CharacterRegisterDto;
 import com.webtoonchat.toonchat.domain.Character;
@@ -18,8 +21,9 @@ import com.webtoonchat.toonchat.service.CharacterService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
-
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/characters")
@@ -28,10 +32,17 @@ public class CharacterController {
 	private final CharacterService characterService;
 
 	@Operation(description = "새로운 캐릭터 프로필 생성")
-	@PostMapping
+	@PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<Character> createCharacter(
-		@RequestBody @Validated CharacterRegisterDto characterRegisterDto) {
-		return ResponseEntity.ok(characterService.createCharacter(characterRegisterDto.toEntity()));
+		@RequestPart(value = "characterInfo") @Validated CharacterRegisterDto characterRegisterDto,
+		@RequestPart MultipartFile profileImage,
+		@RequestPart MultipartFile backgroundImage) {
+
+		log.info("profileImageSize={}", profileImage.getSize());
+		log.info("backgroundImageSize={}", backgroundImage.getSize());
+		Character character = new Character(characterRegisterDto.getName(), "/", "/",
+			characterRegisterDto.getStateMessage(), characterRegisterDto.getHashtags());
+		return ResponseEntity.ok(characterService.createCharacter(character));
 	}
 
 	@Operation(description = "모든 캐릭터 프로필 조회")
