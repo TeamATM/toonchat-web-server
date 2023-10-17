@@ -14,7 +14,7 @@ public class BoardResponse {
 	private final String writerName;
 	private final String title;
 	private final String content;
-	private final String characterId;
+	private final Long characterId;
 	private final LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 

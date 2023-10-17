@@ -38,9 +38,7 @@ public class BoardApiController {
 	private final MemberService memberService;
 	@Operation(description = "특정 캐릭터 게시판 게시글 작성")
 	@PostMapping("/api/boards/{characterId}")
-	public ResponseEntity<Board> addBoard(
-			@PathVariable String characterId,
-			@RequestBody AddBoardRequest request, HttpServletRequest httpServletRequest) {
+	public ResponseEntity<Board> addBoard(@PathVariable Long characterId, @RequestBody AddBoardRequest request) {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		Claims claims = (Claims) principal;
 		Long userid = ((Integer) claims.get("userId")).longValue();
@@ -52,8 +50,7 @@ public class BoardApiController {
 
 	@Operation(description = "특정 캐릭터 게시판 모든 게시글 조회")
 	@GetMapping("/api/boards/{characterId}")
-	public ResponseEntity<List<BoardResponse>> findAllBoards(
-			@PathVariable String characterId, HttpServletRequest httpServletRequest) {
+	public ResponseEntity<List<BoardResponse>> findAllBoards(@PathVariable Long characterId) {
 		List<BoardResponse> articles = boardService.findAllByCharacterId(characterId)
 				.stream()
 				.map(BoardResponse::new)
@@ -65,8 +62,7 @@ public class BoardApiController {
 
 	@Operation(description = "특정 캐릭터 게시판 특정 게시글 조회")
 	@GetMapping("/api/boards/{characterId}/{id}")
-	public ResponseEntity<BoardResponse> findBoard(
-			@PathVariable String characterId, @PathVariable long id, HttpServletRequest httpServletRequest) {
+	public ResponseEntity<BoardResponse> findBoard(@PathVariable long id) {
 		Board article = boardService.findById(id);
 
 		return ResponseEntity.ok()
@@ -75,8 +71,7 @@ public class BoardApiController {
 
 	@Operation(description = "특정 캐릭터 게시판 특정 게시글 삭제")
 	@DeleteMapping("/api/boards/{characterId}/{id}")
-	public ResponseEntity<Void> deleteBoard(
-			@PathVariable String characterId, @PathVariable long id, HttpServletRequest httpServletRequest) {
+	public ResponseEntity<Void> deleteBoard(@PathVariable long id) {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		Claims claims = (Claims) principal;
 		Long userid = ((Integer) claims.get("userId")).longValue();
@@ -93,10 +88,8 @@ public class BoardApiController {
 	@Operation(description = "특정 캐릭터 게시판 특정 게시글 수정")
 	@PutMapping("/api/boards/{characterId}/{id}")
 	public ResponseEntity<Board> updateBoard(
-			@PathVariable String characterId,
 			@PathVariable long id,
-			@RequestBody UpdateBoardRequest request,
-			HttpServletRequest httpServletRequest
+			@RequestBody UpdateBoardRequest request
 	) {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		Claims claims = (Claims) principal;
