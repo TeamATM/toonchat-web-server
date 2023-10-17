@@ -37,10 +37,10 @@ public class CharacterController {
 		return ResponseEntity.ok(characterService.getAllCharacters());
 	}
 
-	@Operation(description = "characterId로 캐릭터 조회")
-	@GetMapping("/{id}")
-	public ResponseEntity<Characters> getCharacterByCharacterId(@PathVariable String id) {
-		return ResponseEntity.ok(characterService.getCharacterByCharacterId(id));
+	@Operation(description = "code로 캐릭터 조회")
+	@GetMapping("/{code}")
+	public ResponseEntity<Characters> getCharacterByCode(@PathVariable String code) {
+		return ResponseEntity.ok(characterService.getCharacterByCode(code));
 
 	}
 }

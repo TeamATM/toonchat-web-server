@@ -24,8 +24,8 @@ public class CharacterService {
 		return characterRepository.findAll();
 	}
 
-	public Characters getCharacterByCharacterId(String id) {
-		return characterRepository.findByCharacterId(id);
+	public Characters getCharacterByCode(String code) {
+		return characterRepository.findByCode(code);
 	}
 
 }

@@ -7,6 +7,8 @@ import java.util.Set;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -58,10 +60,12 @@ public class Member {
 			inverseJoinColumns = @JoinColumn(name = "role_id")
 	)
 	private Set<Role> roles = new HashSet<>();
-
-	@OneToMany(mappedBy = "member")
-	private List<Friendship> friendships;  // 수정된 부분
 	public void addRole(Role role) {
 		roles.add(role);
 	}
+
+	@OneToMany(mappedBy = "member")
+	@JsonManagedReference
+	private Set<Friendship> friendships = new HashSet<>();  // 수정된 부분
+
 }
