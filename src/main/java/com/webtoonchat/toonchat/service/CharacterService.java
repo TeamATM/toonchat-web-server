@@ -25,7 +25,7 @@ public class CharacterService {
 	}
 
 	public Character getCharacterById(Long characterId) throws NoSuchElementException {
-		return characterRepository.findById(characterId).orElseThrow(NoSuchElementException::new);
+		return characterRepository.findById(characterId)
+			.orElseThrow(() -> new NoSuchElementException("캐릭터가 존재하지 않습니다."));
 	}
-
 }

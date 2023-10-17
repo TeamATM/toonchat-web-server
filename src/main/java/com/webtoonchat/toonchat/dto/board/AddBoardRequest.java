@@ -19,7 +19,7 @@ public class AddBoardRequest {
 	private Long writerId;
 	private String title;
 	private String content;
-	private String characterId;
+	private Long characterId;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 
