@@ -32,7 +32,9 @@ import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @Validated
@@ -200,9 +202,7 @@ public class MemberController {
 		String provider = String.valueOf((String)claims.get("provider"));
 		Long userId = Long.valueOf((Integer) claims.get("userId"));
 
-		Member member = memberService.getMember(userId).orElseThrow(
-				() -> new IllegalArgumentException("Member not found"));
-
+		Member member = memberService.findByMemberId(userId);
 
 		List roles = (List) claims.get("roles");
 		String email = claims.getSubject();
