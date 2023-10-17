@@ -33,7 +33,7 @@ public class Board {
 	private Long writerId;
 
 	@Column(name = "character_id", nullable = false)
-	private String characterId;
+	private Long characterId;
 
 	@Column(name = "title", nullable = false)
 	private String title;
@@ -52,7 +52,7 @@ public class Board {
 	@Builder // 빌더 패턴으로 객체 생성
 	public Board(
 			String writer, String title, String content, Long writerId,
-			String characterId, LocalDateTime createdAt, LocalDateTime updatedAt) {
+			Long characterId, LocalDateTime createdAt, LocalDateTime updatedAt) {
 		this.title = title;
 		this.content = content;
 		this.characterId = characterId;

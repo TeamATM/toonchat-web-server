@@ -1,6 +1,7 @@
 package com.webtoonchat.toonchat.service.board;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,7 @@ public class BoardService {
 	private final BoardRepository boardRepository;
 	private final MemberRepository memberRepository;
 
-	public Board save(AddBoardRequest request, String characterId, String userName, Long userId) {
+	public Board save(AddBoardRequest request, Long characterId, String userName, Long userId) {
 		request.setCharacterId(characterId);
 		request.setWriter(userName);
 		request.setWriterId(userId);
@@ -31,14 +32,14 @@ public class BoardService {
 	}
 
 
-	public List<Board> findAllByCharacterId(String characterId) {
+	public List<Board> findAllByCharacterId(Long characterId) {
 		return boardRepository.findAllByCharacterId(characterId);
 	}
 
 
 	public Board findById(long id) {
 		return boardRepository.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("not found: " + id));
+				.orElseThrow(() -> new NoSuchElementException("해당 게시글이 존재하지 않습니다."));
 	}
 
 	public void delete(long id) {
