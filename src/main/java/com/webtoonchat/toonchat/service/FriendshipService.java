@@ -1,14 +1,13 @@
 package com.webtoonchat.toonchat.service;
 
 import java.util.List;
-import java.util.Optional;
-
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.webtoonchat.toonchat.domain.Characters;
+import com.webtoonchat.toonchat.domain.Character;
 import com.webtoonchat.toonchat.domain.Friendship;
+import com.webtoonchat.toonchat.domain.FriendshipId;
 import com.webtoonchat.toonchat.domain.Member;
 import com.webtoonchat.toonchat.repository.FriendshipRepository;
 
@@ -19,38 +18,32 @@ import lombok.RequiredArgsConstructor;
 public class FriendshipService {
 
 	private final FriendshipRepository friendshipRepository;
+	private final MemberService memberService;
+	private final CharacterService characterService;
 
-	public List<Friendship> getFriendshipsByMemberId(Long memberId) {
-		return friendshipRepository.findByMemberMemberId(memberId);
-	}
-
-	public List<Friendship> getAll() {
-		return friendshipRepository.findAll();
-	}
-
-	public Optional<Friendship> getById(Long id) {
-		return friendshipRepository.findById(id);
+	public List<Character> getFriendsByMemberId(Long memberId) {
+		return friendshipRepository.findFriendsByMemberId(memberId);
 	}
 
 	public Friendship create(Friendship friendship) {
 		return friendshipRepository.save(friendship);
 	}
 
-	public void delete(Long id) {
-		if (friendshipRepository.existsById(id)) {
-			friendshipRepository.deleteById(id);
+	public void delete(Long memberId, Long characterId) {
+		FriendshipId friendshipId = new FriendshipId(memberId, characterId);
+		if (friendshipRepository.existsById(friendshipId)) {
+			friendshipRepository.deleteById(friendshipId);
 		}
 	}
 
 	@Transactional
-	public Friendship createFriendship(Member member, Characters charac) {
+	public Friendship createFriendship(Long memberId, Long characterId) {
+		Member member = memberService.getMemberReference(memberId);
+		Character character = characterService.getCharacterById(characterId);
 		// 친구 관계 생성
-		Friendship friendship = new Friendship();
-		friendship.setMember(member);
-		friendship.setCharacters(charac);
+		FriendshipId friendshipId = new FriendshipId(member.getId(), character.getId());
+		Friendship friendship = new Friendship(friendshipId, member, character);
 
 		return friendshipRepository.save(friendship);
 	}
-
-
 }

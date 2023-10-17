@@ -71,19 +71,19 @@ public class MemberController {
 		List<String> roles = foundMember.getRoles().stream().map(Role::getName).collect(Collectors.toList());
 
 		String accessToken = jwtTokenizer.createAccessToken(
-				foundMember.getProvider(), foundMember.getMemberId(), foundMember.getEmail(), roles);
+				foundMember.getProvider(), foundMember.getId(), foundMember.getEmail(), roles);
 		String refreshToken = jwtTokenizer.createRefreshToken(
-				foundMember.getProvider(), foundMember.getMemberId(), foundMember.getEmail(), roles);
+				foundMember.getProvider(), foundMember.getId(), foundMember.getEmail(), roles);
 
 		RefreshToken refreshTokenEntity = new RefreshToken();
 		refreshTokenEntity.setValue(refreshToken);
-		refreshTokenEntity.setMemberId(foundMember.getMemberId());
+		refreshTokenEntity.setMemberId(foundMember.getId());
 		refreshTokenService.addRefreshToken(refreshTokenEntity);
 
 		MemberLoginResponseDto loginResponse = MemberLoginResponseDto.builder()
 				.accessToken(accessToken)
 				.refreshToken(refreshToken)
-				.memberId(foundMember.getMemberId())
+				.memberId(foundMember.getId())
 				.nickname(foundMember.getName())
 				.profileUrl(foundMember.getProfileUrl())
 				.provider(foundMember.getProvider())
@@ -116,7 +116,7 @@ public class MemberController {
 		Member saveMember = memberService.addMember(member);
 
 		MemberSignupResponseDto memberSignupResponse = new MemberSignupResponseDto();
-		memberSignupResponse.setMemberId(saveMember.getMemberId());
+		memberSignupResponse.setMemberId(saveMember.getId());
 		memberSignupResponse.setName(saveMember.getName());
 		memberSignupResponse.setRegdate(saveMember.getRegdate());
 		memberSignupResponse.setEmail(saveMember.getEmail());
@@ -149,9 +149,9 @@ public class MemberController {
 
 		// JWT토큰을 생성하였다. jwt라이브러리를 이용하여 생성.
 		String accessToken = jwtTokenizer.createAccessToken(
-				member.getProvider(), member.getMemberId(), member.getEmail(), roles);
+				member.getProvider(), member.getId(), member.getEmail(), roles);
 		String refreshToken = jwtTokenizer.createRefreshToken(
-				member.getProvider(), member.getMemberId(), member.getEmail(), roles);
+				member.getProvider(), member.getId(), member.getEmail(), roles);
 
 		/**
 		 * RefreshToken을 DB에 저장한다.
@@ -159,7 +159,7 @@ public class MemberController {
 		 */
 		RefreshToken refreshTokenEntity = new RefreshToken();
 		refreshTokenEntity.setValue(refreshToken);
-		refreshTokenEntity.setMemberId(member.getMemberId());
+		refreshTokenEntity.setMemberId(member.getId());
 		refreshTokenService.addRefreshToken(refreshTokenEntity);
 
 		/**
@@ -168,7 +168,7 @@ public class MemberController {
 		MemberLoginResponseDto loginResponse = MemberLoginResponseDto.builder()
 				.accessToken(accessToken)
 				.refreshToken(refreshToken)
-				.memberId(member.getMemberId())
+				.memberId(member.getId())
 				.nickname(member.getName())
 				.profileUrl(member.getProfileUrl())
 				.provider(member.getProvider())
@@ -214,7 +214,7 @@ public class MemberController {
 		MemberLoginResponseDto loginResponse = MemberLoginResponseDto.builder()
 				.accessToken(accessToken)
 				.refreshToken(refreshTokenDto.getRefreshToken())
-				.memberId(member.getMemberId())
+				.memberId(member.getId())
 				.nickname(member.getName())
 				.profileUrl(member.getProfileUrl())
 				.provider(member.getProvider())
