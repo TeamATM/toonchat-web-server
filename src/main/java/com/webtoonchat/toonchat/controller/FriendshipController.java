@@ -1,14 +1,9 @@
 package com.webtoonchat.toonchat.controller;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
-import javax.xml.stream.events.Characters;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,9 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.webtoonchat.toonchat.domain.Character;
-import com.webtoonchat.toonchat.domain.Friendship;
-import com.webtoonchat.toonchat.domain.FriendshipId;
-import com.webtoonchat.toonchat.domain.Member;
+import com.webtoonchat.toonchat.resolver.annotation.Login;
 import com.webtoonchat.toonchat.service.CharacterService;
 import com.webtoonchat.toonchat.service.FriendshipService;
 import com.webtoonchat.toonchat.service.MemberService;
@@ -40,10 +33,8 @@ public class FriendshipController {
 	private final CharacterService characterService;
 
 	@GetMapping("")
-	public ResponseEntity<List<Character>> getAll() {
+	public ResponseEntity<List<Character>> getAll(@Login Claims claims) {
 		// 현재 사용자 정보 가져오기
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		Claims claims = (Claims) principal;
 		Long userId = ((Integer) claims.get("userId")).longValue();
 
 		// Friendship 테이블에서 characterId 목록 가져오기
@@ -66,9 +57,7 @@ public class FriendshipController {
 
 	@Operation(description = "새로운 친구관계 생성")
 	@PostMapping("/{characterId}")
-	public ResponseEntity createFriendship(@PathVariable Long characterId) {
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		Claims claims = (Claims) principal;
+	public ResponseEntity createFriendship(@PathVariable Long characterId, @Login Claims claims) {
 		Long userid = ((Integer) claims.get("userId")).longValue();
 
 		friendshipService.createFriendship(userid, characterId);
@@ -77,9 +66,7 @@ public class FriendshipController {
 	}
 
 	@DeleteMapping("/{characterId}")
-	public ResponseEntity delete(@PathVariable Long characterId) {
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		Claims claims = (Claims) principal;
+	public ResponseEntity delete(@PathVariable Long characterId, @Login Claims claims) {
 		Long userId = ((Integer) claims.get("userId")).longValue();
 
 		friendshipService.delete(userId, characterId);
