@@ -10,6 +10,7 @@ import com.webtoonchat.toonchat.dto.board.AddBoardRequest;
 import com.webtoonchat.toonchat.dto.board.UpdateBoardRequest;
 import com.webtoonchat.toonchat.repository.BoardRepository;
 import com.webtoonchat.toonchat.repository.MemberRepository;
+import com.webtoonchat.toonchat.service.CharacterService;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +19,12 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class BoardService {
 	private final BoardRepository boardRepository;
-	private final MemberRepository memberRepository;
+	private final CharacterService characterService;
 
 	public Board save(AddBoardRequest request, Long characterId, String userName, Long userId) {
+		if (!characterService.isCharacterExist(characterId)) {
+			throw new NoSuchElementException("캐릭터가 존재하지 않습니다.");
+		}
 		request.setCharacterId(characterId);
 		request.setWriter(userName);
 		request.setWriterId(userId);
