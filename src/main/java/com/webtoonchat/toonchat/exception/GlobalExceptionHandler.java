@@ -1,5 +1,6 @@
 package com.webtoonchat.toonchat.exception;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -18,7 +19,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.webtoonchat.toonchat.exception.dto.ErrorMessageDto;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestControllerAdvice
 @RequiredArgsConstructor
 public class GlobalExceptionHandler {
@@ -65,18 +68,13 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler({BindException.class})
 	public ResponseEntity<ErrorMessageDto> handleDefaultException(BindException ex, Locale locale) {
-		if (ex.hasErrors()) {
-			Map<String, String> errorResults = new HashMap<>();
-			for (ObjectError error : ex.getGlobalErrors()) {
-				String message = messageSource.getMessage(error, locale);
-				errorResults.put(error.getObjectName(), message);
-			}
-			for (FieldError fieldError : ex.getFieldErrors()) {
-				errorResults.put(fieldError.getField(), messageSource.getMessage(fieldError, locale));
-			}
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessageDto(errorResults));
+		Map<String, String> errorResults = new HashMap<>();
+		for (ObjectError error : ex.getGlobalErrors()) {
+			errorResults.put(error.getObjectName(), messageSource.getMessage(error, locale));
 		}
-
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessageDto(ex.getMessage()));
+		for (FieldError fieldError : ex.getFieldErrors()) {
+			errorResults.put(fieldError.getField(), messageSource.getMessage(fieldError, locale));
+		}
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessageDto(errorResults));
 	}
 }

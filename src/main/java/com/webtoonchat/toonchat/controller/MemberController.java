@@ -50,11 +50,7 @@ public class MemberController {
 	@Operation(description = "소셜 로그인")
 	@PostMapping("/social-login")
 	public ResponseEntity socialSignupOrLogin(
-			@RequestBody @Valid MemberSignupDto memberSignupDto, BindingResult bindingResult) {
-		if (bindingResult.hasErrors()) {
-			return new ResponseEntity(HttpStatus.BAD_REQUEST);
-		}
-
+			@RequestBody @Validated MemberSignupDto memberSignupDto) {
 		/**
 		 * 가입된 이력 없을 때
 		 */
@@ -93,10 +89,7 @@ public class MemberController {
 
 	@Operation(description = "일반 회원가입")
 	@PostMapping("/signup")
-	public ResponseEntity signup(@RequestBody @Valid MemberSignupDto memberSignupDto, BindingResult bindingResult) {
-		if (bindingResult.hasErrors()) {
-			return new ResponseEntity(HttpStatus.BAD_REQUEST);
-		}
+	public ResponseEntity signup(@RequestBody @Validated MemberSignupDto memberSignupDto) {
 		/**
 		 * TODO : 기본 프로필 url set, provider set
 		 *  로그인 중복 처리(완)
@@ -129,11 +122,7 @@ public class MemberController {
 
 	@Operation(description = "일반 로그인")
 	@PostMapping("/login")
-	public ResponseEntity login(@RequestBody @Valid MemberLoginDto loginDto, BindingResult bindingResult) {
-		if (bindingResult.hasErrors()) {
-			return new ResponseEntity(HttpStatus.BAD_REQUEST);
-		}
-
+	public ResponseEntity login(@RequestBody @Validated MemberLoginDto loginDto) {
 		// email이 없을 경우 Exception이 발생한다. Global Exception에 대한 처리가 필요하다.
 		/**
 		 * TO-Do : findByEmail -> findByEmailAndProvider  변경하기
