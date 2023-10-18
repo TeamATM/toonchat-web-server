@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.webtoonchat.toonchat.exception.dto.ErrorMessageDto;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,11 +29,19 @@ public class GlobalExceptionHandler {
 	private final MessageSource messageSource;
 
 	@ExceptionHandler({NoSuchElementException.class})
-	public ResponseEntity<ErrorMessageDto> handleNoSuchElementFoundException(NoSuchElementException ex, Locale locale) {
+	public ResponseEntity<ErrorMessageDto> handleNoSuchElementFoundException(
+		HttpServletRequest request,
+		NoSuchElementException ex,
+		Locale locale) {
 		String errorMessage = ex.getMessage();
+		log.warn("remoteAddress={}, requestURI={}, method={}, message={}",
+			request.getRemoteHost(),
+			request.getRequestURI(),
+			request.getMethod(),
+			errorMessage);
 		if (errorMessage == null) {
 			errorMessage = messageSource.getMessage(
-				"resource.notfound",
+				"exception.noSuchElement",
 				null,
 				"해당 값이 존재하지 않습니다.",
 				locale);
@@ -41,8 +50,16 @@ public class GlobalExceptionHandler {
 	}
 
 	@ExceptionHandler({IllegalArgumentException.class})
-	public ResponseEntity<ErrorMessageDto> handleIllegalArgumentException(IllegalArgumentException ex, Locale locale) {
+	public ResponseEntity<ErrorMessageDto> handleIllegalArgumentException(
+		HttpServletRequest request,
+		IllegalArgumentException ex,
+		Locale locale) {
 		String errorMessage = ex.getMessage();
+		log.warn("remoteAddress={}, requestURI={}, method={}, message={}",
+			request.getRemoteHost(),
+			request.getRequestURI(),
+			request.getMethod(),
+			errorMessage);
 		if (errorMessage == null) {
 			errorMessage = messageSource.getMessage(
 				"exception.illegalArgument",
@@ -54,8 +71,16 @@ public class GlobalExceptionHandler {
 	}
 
 	@ExceptionHandler({Exception.class})
-	public ResponseEntity<ErrorMessageDto> handleDefaultException(Exception ex, Locale locale) {
+	public ResponseEntity<ErrorMessageDto> handleDefaultException(
+		HttpServletRequest request,
+		Exception ex,
+		Locale locale) {
 		String errorMessage = ex.getMessage();
+		log.error("remoteAddress={}, requestURI={}, method={}, message={}",
+			request.getRemoteHost(),
+			request.getRequestURI(),
+			request.getMethod(),
+			errorMessage);
 		if (errorMessage == null) {
 			errorMessage = messageSource.getMessage(
 				"exception",
@@ -67,7 +92,15 @@ public class GlobalExceptionHandler {
 	}
 
 	@ExceptionHandler({BindException.class})
-	public ResponseEntity<ErrorMessageDto> handleDefaultException(BindException ex, Locale locale) {
+	public ResponseEntity<ErrorMessageDto> handleDefaultException(
+		HttpServletRequest request,
+		BindException ex,
+		Locale locale) {
+		log.info("remoteAddress={}, requestURI={}, method={}, message={}",
+			request.getRemoteHost(),
+			request.getRequestURI(),
+			request.getMethod(),
+			ex.getMessage());
 		Map<String, String> errorResults = new HashMap<>();
 		for (ObjectError error : ex.getGlobalErrors()) {
 			errorResults.put(error.getObjectName(), messageSource.getMessage(error, locale));
