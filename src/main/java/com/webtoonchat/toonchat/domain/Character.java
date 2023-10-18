@@ -1,5 +1,7 @@
 package com.webtoonchat.toonchat.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,6 +22,7 @@ public class Character {
 	@Id
 	@Column
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@JsonProperty("characterId")
 	private Long id;
 
 	@Column
@@ -29,23 +32,23 @@ public class Character {
 	private String backgroundImageUrl;
 
 	@Column
-	private String stateMessage;
+	private String statusMessage;
 
 	@Column
 	private String hashTag;
 
 	@Column
-	private String name;
+	private String characterName;
 
-	public Character(String name,
+	public Character(String characterName,
 		String profileImageUrl,
 		String backgroundImageUrl,
-		String stateMessage,
+		String statusMessage,
 		String hashTag) {
-		this.name = name;
+		this.characterName = characterName;
 		this.profileImageUrl = profileImageUrl;
 		this.backgroundImageUrl = backgroundImageUrl;
-		this.stateMessage = stateMessage;
+		this.statusMessage = statusMessage;
 		this.hashTag = hashTag;
 	}
 }
