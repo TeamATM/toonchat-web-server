@@ -1,11 +1,16 @@
 package com.webtoonchat.toonchat.exception;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -42,7 +47,7 @@ public class GlobalExceptionHandler {
 				"올바르지 않은 요청",
 				locale);
 		}
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessageDto(errorMessage));
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessageDto(errorMessage));
 	}
 
 	@ExceptionHandler({Exception.class})
@@ -55,6 +60,23 @@ public class GlobalExceptionHandler {
 				"예기치 못한 오류",
 				locale);
 		}
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessageDto(errorMessage));
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessageDto(errorMessage));
+	}
+
+	@ExceptionHandler({BindException.class})
+	public ResponseEntity<ErrorMessageDto> handleDefaultException(BindException ex, Locale locale) {
+		if (ex.hasErrors()) {
+			Map<String, String> errorResults = new HashMap<>();
+			for (ObjectError error : ex.getGlobalErrors()) {
+				String message = messageSource.getMessage(error, locale);
+				errorResults.put(error.getObjectName(), message);
+			}
+			for (FieldError fieldError : ex.getFieldErrors()) {
+				errorResults.put(fieldError.getField(), messageSource.getMessage(fieldError, locale));
+			}
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessageDto(errorResults));
+		}
+
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessageDto(ex.getMessage()));
 	}
 }
