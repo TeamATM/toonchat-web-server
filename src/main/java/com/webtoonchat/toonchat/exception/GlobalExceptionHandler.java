@@ -34,11 +34,7 @@ public class GlobalExceptionHandler {
 		NoSuchElementException ex,
 		Locale locale) {
 		String errorMessage = ex.getMessage();
-		log.warn("remoteAddress={}, requestURI={}, method={}, message={}",
-			request.getRemoteHost(),
-			request.getRequestURI(),
-			request.getMethod(),
-			errorMessage);
+		logError(request, errorMessage, ex);
 		if (errorMessage == null) {
 			errorMessage = messageSource.getMessage(
 				"exception.noSuchElement",
@@ -55,17 +51,9 @@ public class GlobalExceptionHandler {
 		IllegalArgumentException ex,
 		Locale locale) {
 		String errorMessage = ex.getMessage();
-		log.warn("remoteAddress={}, requestURI={}, method={}, message={}",
-			request.getRemoteHost(),
-			request.getRequestURI(),
-			request.getMethod(),
-			errorMessage);
+		logError(request, errorMessage, ex);
 		if (errorMessage == null) {
-			errorMessage = messageSource.getMessage(
-				"exception.illegalArgument",
-				null,
-				"올바르지 않은 요청",
-				locale);
+			errorMessage = messageSource.getMessage("exception.illegalArgument", null, "올바르지 않은 요청", locale);
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessageDto(errorMessage));
 	}
@@ -75,19 +63,10 @@ public class GlobalExceptionHandler {
 		HttpServletRequest request,
 		Exception ex,
 		Locale locale) {
-		String errorMessage = ex.getMessage();
-		log.error("remoteAddress={}, requestURI={}, method={}, message={}",
-			request.getRemoteHost(),
-			request.getRequestURI(),
-			request.getMethod(),
-			errorMessage);
-		if (errorMessage == null) {
-			errorMessage = messageSource.getMessage(
-				"exception",
-				null,
-				"예기치 못한 오류",
-				locale);
-		}
+
+		logError(request, ex.getMessage(), ex);
+
+		String errorMessage = messageSource.getMessage("exception", null, "예기치 못한 오류", locale);
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessageDto(errorMessage));
 	}
 
@@ -96,11 +75,7 @@ public class GlobalExceptionHandler {
 		HttpServletRequest request,
 		BindException ex,
 		Locale locale) {
-		log.info("remoteAddress={}, requestURI={}, method={}, message={}",
-			request.getRemoteHost(),
-			request.getRequestURI(),
-			request.getMethod(),
-			ex.getMessage());
+		logError(request, ex.getMessage(), ex);
 		Map<String, String> errorResults = new HashMap<>();
 		for (ObjectError error : ex.getGlobalErrors()) {
 			errorResults.put(error.getObjectName(), messageSource.getMessage(error, locale));
@@ -109,5 +84,14 @@ public class GlobalExceptionHandler {
 			errorResults.put(fieldError.getField(), messageSource.getMessage(fieldError, locale));
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessageDto(errorResults));
+	}
+
+	private void logError(HttpServletRequest request, String errorMessage, Exception ex) {
+		log.warn("remoteAddress={}, requestURI={}, method={}, message={}, exception={}",
+			request.getRemoteHost(),
+			request.getRequestURI(),
+			request.getMethod(),
+			errorMessage,
+			ex.getClass());
 	}
 }
