@@ -49,7 +49,7 @@ public class MemberController {
 
 	@Operation(description = "소셜 로그인")
 	@PostMapping("/social-login")
-	public ResponseEntity socialSignupOrLogin(
+	public ResponseEntity<MemberLoginResponseDto> socialSignupOrLogin(
 			@RequestBody @Validated MemberSignupDto memberSignupDto) {
 		/**
 		 * 가입된 이력 없을 때
@@ -62,7 +62,7 @@ public class MemberController {
 			member.setProfileUrl("defaultProfileUrl.png");
 			memberService.addMember(member);
 		}
-		Member foundMember = memberService.findByEmailAndProvider(
+		Member foundMember = memberService.findByEmailAndProviderWithRoles(
 				memberSignupDto.getEmail(), memberSignupDto.getProvider());
 		List<String> roles = foundMember.getRoles().stream().map(Role::getName).collect(Collectors.toList());
 
@@ -84,12 +84,12 @@ public class MemberController {
 				.profileUrl(foundMember.getProfileUrl())
 				.provider(foundMember.getProvider())
 				.build();
-		return new ResponseEntity(loginResponse, HttpStatus.OK);
+		return ResponseEntity.ok(loginResponse);
 	}
 
 	@Operation(description = "일반 회원가입")
 	@PostMapping("/signup")
-	public ResponseEntity signup(@RequestBody @Validated MemberSignupDto memberSignupDto) {
+	public ResponseEntity<MemberSignupResponseDto> signup(@RequestBody @Validated MemberSignupDto memberSignupDto) {
 		/**
 		 * TODO : 기본 프로필 url set, provider set
 		 *  로그인 중복 처리(완)
@@ -117,17 +117,18 @@ public class MemberController {
 		memberSignupResponse.setProvider(saveMember.getProvider());
 
 		// 회원가입
-		return new ResponseEntity(memberSignupResponse, HttpStatus.CREATED);
+		return ResponseEntity.status(HttpStatus.CREATED).body(memberSignupResponse);
 	}
 
 	@Operation(description = "일반 로그인")
 	@PostMapping("/login")
-	public ResponseEntity login(@RequestBody @Validated MemberLoginDto loginDto) {
+	public ResponseEntity<MemberLoginResponseDto> login(@RequestBody @Validated MemberLoginDto loginDto) {
+		log.debug("login start");
 		// email이 없을 경우 Exception이 발생한다. Global Exception에 대한 처리가 필요하다.
 		/**
 		 * TO-Do : findByEmail -> findByEmailAndProvider  변경하기
 		 */
-		Member member = memberService.findByEmailAndProvider(loginDto.getEmail(), loginDto.getProvider());
+		Member member = memberService.findByEmailAndProviderWithRoles(loginDto.getEmail(), loginDto.getProvider());
 		if (member.getPassword() != null) {
 			if (!passwordEncoder.matches(loginDto.getPassword(), member.getPassword())) {
 				return new ResponseEntity(HttpStatus.UNAUTHORIZED);
@@ -162,7 +163,7 @@ public class MemberController {
 				.profileUrl(member.getProfileUrl())
 				.provider(member.getProvider())
 				.build();
-		return new ResponseEntity(loginResponse, HttpStatus.OK);
+		return ResponseEntity.ok(loginResponse);
 	}
 
 	@Operation(description = "로그아웃")
@@ -182,7 +183,7 @@ public class MemberController {
 	 */
 	@Operation(description = "access token 재발급")
 	@PostMapping("/refreshToken")
-	public ResponseEntity requestRefresh(@RequestBody RefreshTokenDto refreshTokenDto) {
+	public ResponseEntity<MemberLoginResponseDto> requestRefresh(@RequestBody RefreshTokenDto refreshTokenDto) {
 		RefreshToken refreshToken = refreshTokenService.findRefreshToken(
 				refreshTokenDto.getRefreshToken()).orElseThrow(() ->
 				new IllegalArgumentException("Refresh token not found"));
@@ -208,7 +209,7 @@ public class MemberController {
 				.profileUrl(member.getProfileUrl())
 				.provider(member.getProvider())
 				.build();
-		return new ResponseEntity(loginResponse, HttpStatus.OK);
+		return ResponseEntity.ok().body(loginResponse);
 	}
 
 }

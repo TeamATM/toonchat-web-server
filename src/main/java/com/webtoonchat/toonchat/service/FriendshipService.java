@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.webtoonchat.toonchat.controller.dto.CharacterResponseDto;
 import com.webtoonchat.toonchat.domain.Character;
 import com.webtoonchat.toonchat.domain.Friendship;
 import com.webtoonchat.toonchat.domain.FriendshipId;
@@ -21,7 +22,7 @@ public class FriendshipService {
 	private final MemberService memberService;
 	private final CharacterService characterService;
 
-	public List<Character> getFriendsByMemberId(Long memberId) {
+	public List<CharacterResponseDto> getFriendsByMemberId(Long memberId) {
 		return friendshipRepository.findFriendsByMemberId(memberId);
 	}
 

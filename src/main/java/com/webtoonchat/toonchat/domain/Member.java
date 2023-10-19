@@ -10,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -53,7 +54,7 @@ public class Member {
 	@CreationTimestamp // 현재시간이 저장될 때 자동으로 생성.
 	private LocalDateTime regdate;
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "member_role",
 			joinColumns = @JoinColumn(name = "member_id"),
 			inverseJoinColumns = @JoinColumn(name = "role_id")
