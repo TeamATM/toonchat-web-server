@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.webtoonchat.toonchat.controller.dto.CharacterResponseDto;
 import com.webtoonchat.toonchat.domain.Character;
 import com.webtoonchat.toonchat.resolver.annotation.Login;
 import com.webtoonchat.toonchat.service.CharacterService;
@@ -33,12 +34,12 @@ public class FriendshipController {
 	private final CharacterService characterService;
 
 	@GetMapping("")
-	public ResponseEntity<List<Character>> getAll(@Login Claims claims) {
+	public ResponseEntity<List<CharacterResponseDto>> getAll(@Login Claims claims) {
 		// 현재 사용자 정보 가져오기
 		Long userId = ((Integer) claims.get("userId")).longValue();
 
 		// Friendship 테이블에서 characterId 목록 가져오기
-		List<Character> friends = friendshipService.getFriendsByMemberId(userId);
+		List<CharacterResponseDto> friends = friendshipService.getFriendsByMemberId(userId);
 
 		return ResponseEntity.ok(friends);
 	}
