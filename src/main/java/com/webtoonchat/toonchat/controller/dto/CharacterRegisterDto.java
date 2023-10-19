@@ -1,7 +1,5 @@
 package com.webtoonchat.toonchat.controller.dto;
 
-import com.webtoonchat.toonchat.domain.Character;
-
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
@@ -10,6 +8,9 @@ public class CharacterRegisterDto {
 	@NotBlank
 	private String name;
 	@NotBlank
-	private String stateMessage;
-	private String hashtags;
+	private String statusMessage;
+	@NotBlank
+	private String hashTag;
+	@NotBlank
+	private String persona;
 }

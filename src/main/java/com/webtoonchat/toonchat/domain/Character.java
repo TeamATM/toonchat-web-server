@@ -1,12 +1,16 @@
 package com.webtoonchat.toonchat.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.webtoonchat.toonchat.controller.dto.CharacterRegisterDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,15 +44,21 @@ public class Character {
 	@Column
 	private String characterName;
 
-	public Character(String characterName,
-		String profileImageUrl,
-		String backgroundImageUrl,
-		String statusMessage,
-		String hashTag) {
-		this.characterName = characterName;
+	@Column
+	private String persona;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "member_id")
+	private Member owner;
+
+	public Character(CharacterRegisterDto registerDto, String profileImageUrl,
+		String backgroundImageUrl, Member owner) {
+		this.characterName = registerDto.getName();
+		this.statusMessage = registerDto.getStatusMessage();
+		this.hashTag = registerDto.getHashTag();
+		this.persona = registerDto.getPersona();
 		this.profileImageUrl = profileImageUrl;
 		this.backgroundImageUrl = backgroundImageUrl;
-		this.statusMessage = statusMessage;
-		this.hashTag = hashTag;
+		this.owner = owner;
 	}
 }
