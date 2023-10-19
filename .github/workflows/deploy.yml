@@ -18,10 +18,15 @@ env:
 jobs:
   build:
     runs-on: ubuntu-20.04
+    env:
+      SPRING_PROFILES_ACTIVE: ${{ github.event.inputs.tags == 'latest' && 'prod' || 'dev' }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Test profile
+        run: echo $SPRING_PROFILES_ACTIVE
 
       - uses: keithweaver/aws-s3-github-action@v1.0.0 # Verifies the recursive flag
         name: sync folder
