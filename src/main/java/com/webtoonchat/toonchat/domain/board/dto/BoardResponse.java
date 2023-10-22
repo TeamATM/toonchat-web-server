@@ -1,8 +1,11 @@
 package com.webtoonchat.toonchat.domain.board.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import com.webtoonchat.toonchat.domain.board.entity.Board;
+import com.webtoonchat.toonchat.domain.comment.dto.CommentResponseDto;
 
 import lombok.Getter;
 
@@ -17,6 +20,7 @@ public class BoardResponse {
 	private final Long characterId;
 	private final LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
+	private List<CommentResponseDto> comments;
 
 	public BoardResponse(Board article) {
 		this.id = article.getId();
@@ -27,5 +31,6 @@ public class BoardResponse {
 		this.createdAt = article.getCreatedAt();
 		this.characterId = article.getCharacterId();
 		this.updatedAt = article.getUpdatedAt();
+		this.comments = article.getComments().stream().map(CommentResponseDto::new).collect(Collectors.toList());
 	}
 }
