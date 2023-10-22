@@ -35,7 +35,7 @@ public class FriendshipController {
 	@GetMapping("")
 	public ResponseEntity<List<CharacterResponseDto>> getAll(@Login Claims claims) {
 		// 현재 사용자 정보 가져오기
-		Long userId = ((Integer) claims.get("userId")).longValue();
+		Long userId = claims.get("userId", Long.class);
 
 		// Friendship 테이블에서 characterId 목록 가져오기
 		List<CharacterResponseDto> friends = friendshipService.getFriendsByMemberId(userId);
@@ -43,31 +43,19 @@ public class FriendshipController {
 		return ResponseEntity.ok(friends);
 	}
 
-
-	// @GetMapping("/{id}")
-	// public ResponseEntity getById(@PathVariable Long id) {
-	// 	Optional<Friendship> optionalFriendship = friendshipService.getById(id);
-	//
-	// 	if (optionalFriendship.isPresent()) {
-	// 		return new ResponseEntity(optionalFriendship.get(), HttpStatus.OK);
-	// 	} else {
-	// 		return new ResponseEntity(HttpStatus.NOT_FOUND);
-	// 	}
-	// }
-
 	@Operation(description = "새로운 친구관계 생성")
 	@PostMapping("/{characterId}")
 	public ResponseEntity createFriendship(@PathVariable Long characterId, @Login Claims claims) {
-		Long userid = ((Integer) claims.get("userId")).longValue();
+		Long userId = claims.get("userId", Long.class);
 
-		friendshipService.createFriendship(userid, characterId);
+		friendshipService.createFriendship(userId, characterId);
 
 		return new ResponseEntity(HttpStatus.CREATED);
 	}
 
 	@DeleteMapping("/{characterId}")
 	public ResponseEntity delete(@PathVariable Long characterId, @Login Claims claims) {
-		Long userId = ((Integer) claims.get("userId")).longValue();
+		Long userId = claims.get("userId", Long.class);
 
 		friendshipService.delete(userId, characterId);
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
