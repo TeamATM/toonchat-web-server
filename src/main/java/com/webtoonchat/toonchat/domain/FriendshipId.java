@@ -16,6 +16,6 @@ import lombok.NoArgsConstructor;
 public class FriendshipId implements Serializable {
 	@Column(name = "member_id")
 	private Long memberId;
-	@Column(name = "member_id")
+	@Column(name = "character_id")
 	private Long characterId;
 }
