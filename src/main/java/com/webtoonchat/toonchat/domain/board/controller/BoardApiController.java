@@ -38,9 +38,9 @@ public class BoardApiController {
 	public ResponseEntity<Board> addBoard(@PathVariable Long characterId,
 		@RequestBody AddBoardRequest request,
 		@Login Claims claims) {
-		Long userid = ((Integer) claims.get("userId")).longValue();
-		Member member = memberService.findByMemberId(userid);
-		Board savedArticle = boardService.save(request, characterId, member.getName(), userid);
+		Long userId = claims.get("userId", Long.class);
+		Member member = memberService.findByMemberId(userId);
+		Board savedArticle = boardService.save(request, characterId, member.getName(), userId);
 		return ResponseEntity.status(HttpStatus.CREATED)
 				.body(savedArticle);
 	}
