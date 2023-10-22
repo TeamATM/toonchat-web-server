@@ -1,18 +1,16 @@
 package com.webtoonchat.toonchat;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.amqp.core.Message;
-import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.webtoonchat.toonchat.dto.message.CharacterMessageOp;
-import com.webtoonchat.toonchat.dto.message.CharacterUpdateMessageDto;
+import com.webtoonchat.toonchat.domain.message.dto.CharacterMessageOp;
+import com.webtoonchat.toonchat.domain.message.dto.CharacterUpdateMessageDto;
 
 public class MessageTest {
 
