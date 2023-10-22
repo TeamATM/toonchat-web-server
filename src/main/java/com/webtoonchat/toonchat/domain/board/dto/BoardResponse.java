@@ -26,5 +26,6 @@ public class BoardResponse {
 		this.content = article.getContent();
 		this.createdAt = article.getCreatedAt();
 		this.characterId = article.getCharacterId();
+		this.updatedAt = article.getUpdatedAt();
 	}
 }
