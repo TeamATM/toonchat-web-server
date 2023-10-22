@@ -12,7 +12,7 @@ import com.webtoonchat.toonchat.domain.member.entity.FriendshipId;
 
 @Repository
 public interface FriendshipRepository extends JpaRepository<Friendship, FriendshipId> {
-	@Query("select new com.webtoonchat.toonchat.controller.dto.CharacterResponseDto("
+	@Query("select new com.webtoonchat.toonchat.domain.character.dto.CharacterResponseDto("
 		+ "c.id, c.characterName, c.profileImageUrl, c.backgroundImageUrl, c.statusMessage, c.hashTag) "
 		+ "from Friendship f join f.character c where f.member.id = :memberId")
 	List<CharacterResponseDto> findFriendsByMemberId(Long memberId);
