@@ -1,5 +1,11 @@
 package com.webtoonchat.toonchat.domain.member.entity;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+
+import org.springframework.data.annotation.CreatedDate;
+
 import com.webtoonchat.toonchat.domain.character.entity.Character;
 
 import jakarta.persistence.EmbeddedId;
@@ -14,6 +20,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 
 @Getter
 @Setter
@@ -34,4 +41,14 @@ public class Friendship {
 	@MapsId("characterId")
 	@JoinColumn(name = "character_id")
 	private Character character;
+
+	@CreatedDate
+	private LocalDateTime regdate;
+
+	public Friendship(FriendshipId friendshipId, Member member, Character character) {
+		this.id = friendshipId;
+		this.member = member;
+		this.character = character;
+		this.regdate = LocalDateTime.now(ZoneOffset.ofHours(9));
+	}
 }
