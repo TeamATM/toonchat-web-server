@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.webtoonchat.toonchat.domain.member.util.RedisUtil;
 import com.webtoonchat.toonchat.security.jwt.exception.JwtExceptionCode;
 import com.webtoonchat.toonchat.security.jwt.token.JwtAuthenticationToken;
 
@@ -28,6 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	private final AuthenticationManager authenticationManager;
+	private final RedisUtil redisUtil;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -37,7 +39,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			token = getToken(request);
 			if (StringUtils.hasText(token)) {
 				getAuthentication(token);
+				if (redisUtil.hasKey(token)) {
+					throw new SecurityException("로그아웃된 토큰입니다.");
+				}
 			}
+
 		} catch (NullPointerException | IllegalStateException e) {
 			request.setAttribute("exception", JwtExceptionCode.NOT_FOUND_TOKEN.getCode());
 			log.error("Not found Token // token : {}", token);

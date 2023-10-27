@@ -11,6 +11,7 @@ public enum JwtExceptionCode {
 	UNSUPPORTED_TOKEN("UNSUPPORTED_TOKEN", "지원하지 않는 토큰");
 
 
+
 	@Getter
 	private String code;
 
