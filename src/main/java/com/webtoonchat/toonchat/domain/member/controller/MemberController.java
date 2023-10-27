@@ -3,12 +3,10 @@ package com.webtoonchat.toonchat.domain.member.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,13 +20,16 @@ import com.webtoonchat.toonchat.domain.member.entity.Member;
 import com.webtoonchat.toonchat.domain.member.entity.Role;
 import com.webtoonchat.toonchat.domain.member.repository.MemberRepository;
 import com.webtoonchat.toonchat.domain.member.service.MemberService;
+import com.webtoonchat.toonchat.domain.member.util.RedisUtil;
 import com.webtoonchat.toonchat.domain.token.dto.RefreshTokenDto;
 import com.webtoonchat.toonchat.domain.token.entity.RefreshToken;
 import com.webtoonchat.toonchat.domain.token.service.RefreshTokenService;
+import com.webtoonchat.toonchat.resolver.annotation.Login;
 import com.webtoonchat.toonchat.security.jwt.util.JwtTokenizer;
 
 import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,6 +45,7 @@ public class MemberController {
 	private final MemberService memberService;
 	private final RefreshTokenService refreshTokenService;
 	private final PasswordEncoder passwordEncoder;
+	private final RedisUtil redisUtil;
 
 	@Operation(description = "소셜 로그인")
 	@PostMapping("/social-login")
@@ -165,13 +167,17 @@ public class MemberController {
 	}
 
 	@Operation(description = "로그아웃")
-	@DeleteMapping("/logout")
-	public ResponseEntity logout(@RequestBody RefreshTokenDto refreshTokenDto) {
+	@PostMapping("/logout")
+	public ResponseEntity logout(HttpServletRequest request, @Login Claims claims) {
 		/**
 		 * TODO: Redis에 accessToken blacklist 등록하기 + ttl설정(유효기간까지), filter단에서 인가하기 전에 blacklist 등록되어있는지 확인
 		 */
-		refreshTokenService.deleteRefreshToken(refreshTokenDto.getRefreshToken());
-		return new ResponseEntity(HttpStatus.OK);
+		Long userId = claims.get("userId", Long.class);
+		Long ttl  = claims.getExpiration().getTime() - System.currentTimeMillis();
+		String accessToken = request.getHeader("Authorization").split(" ")[1];
+		redisUtil.setBlackList(accessToken, "access_token", ttl);
+		refreshTokenService.deleteRefreshToken(userId);
+		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}
 
 	/*
