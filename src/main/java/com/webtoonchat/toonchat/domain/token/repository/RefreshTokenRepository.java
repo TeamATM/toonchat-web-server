@@ -8,4 +8,6 @@ import com.webtoonchat.toonchat.domain.token.entity.RefreshToken;
 
 public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long> {
 	Optional<RefreshToken> findByValue(String value);
+
+	void deleteByMemberId(Long userId);
 }
