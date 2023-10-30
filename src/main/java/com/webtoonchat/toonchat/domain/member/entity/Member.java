@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -51,8 +51,8 @@ public class Member {
 	@Column(length = 500)
 	private String password;
 
-	@CreationTimestamp // 현재시간이 저장될 때 자동으로 생성.
-	private LocalDateTime regdate;
+	@CreatedDate
+	private LocalDateTime createdAt;
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "member_role",
