@@ -10,8 +10,8 @@ import lombok.Getter;
 public class CommentResponseDto {
 	private Long id;
 	private String comment;
-	private String createdDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"));
-	private String modifiedDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"));
+	private LocalDateTime  createdAt = LocalDateTime.now();
+	private LocalDateTime updatedAt = LocalDateTime.now();
 	private String nickname;
 	private Long boardId;
 
@@ -19,8 +19,8 @@ public class CommentResponseDto {
 	public CommentResponseDto(Comment comment) {
 		this.id = comment.getId();
 		this.comment = comment.getComment();
-		this.createdDate = comment.getCreatedDate();
-		this.modifiedDate = comment.getModifiedDate();
+		this.createdAt = comment.getCreatedAt();
+		this.updatedAt = comment.getUpdatedAt();
 		this.nickname = comment.getMember().getName();
 		this.boardId = comment.getBoard().getId();
 	}

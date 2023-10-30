@@ -19,8 +19,8 @@ import lombok.NoArgsConstructor;
 public class CommentRequestDto {
 	private Long id;
 	private String comment;
-	private String createdDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"));
-	private String modifiedDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"));
+	private LocalDateTime createdAt = LocalDateTime.now();
+	private LocalDateTime updatedAt = LocalDateTime.now();
 	private Member member;
 	private Board board;
 
@@ -28,8 +28,8 @@ public class CommentRequestDto {
 	public Comment toEntity() {
 		Comment comments = Comment.builder().id(id)
 							.comment(comment)
-							.createdDate(createdDate)
-							.modifiedDate(modifiedDate)
+							.createdAt(createdAt)
+							.updatedAt(updatedAt)
 							.member(member)
 							.board(board)
 							.build();

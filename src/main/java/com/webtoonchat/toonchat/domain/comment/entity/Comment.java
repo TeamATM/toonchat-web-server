@@ -1,5 +1,7 @@
 package com.webtoonchat.toonchat.domain.comment.entity;
 
+import java.time.LocalDateTime;
+
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -20,6 +22,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -35,13 +38,13 @@ public class Comment {
 	@Column(nullable = false)
 	private String comment; // 댓글 내용
 
-	@Column(name = "created_date")
 	@CreatedDate
-	private String createdDate;
+	@Column(name = "created_at")
+	private LocalDateTime createdAt;
 
-	@Column(name = "modified_date")
 	@LastModifiedDate
-	private String modifiedDate;
+	@Column(name = "updated_at")
+	private LocalDateTime updatedAt;
 
 	@ManyToOne
 	@JoinColumn(name = "board_id")
