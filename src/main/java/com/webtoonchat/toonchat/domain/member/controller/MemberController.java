@@ -111,7 +111,7 @@ public class MemberController {
 		MemberSignupResponseDto memberSignupResponse = new MemberSignupResponseDto();
 		memberSignupResponse.setMemberId(saveMember.getId());
 		memberSignupResponse.setName(saveMember.getName());
-		memberSignupResponse.setRegdate(saveMember.getRegdate());
+		memberSignupResponse.setCreatedAt(saveMember.getCreatedAt());
 		memberSignupResponse.setEmail(saveMember.getEmail());
 		memberSignupResponse.setProfileUrl(saveMember.getProfileUrl());
 		memberSignupResponse.setProvider(saveMember.getProvider());

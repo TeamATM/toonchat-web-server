@@ -1,5 +1,6 @@
 package com.webtoonchat.toonchat.domain.comment.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -49,6 +50,7 @@ public class CommentService {
 		Comment comment = commentRepository.findById(commentId).orElseThrow(() ->
 				new IllegalArgumentException("댓글 수정 실패: 해당 댓글이 존재하지 않습니다." + commentId));
 		comment.setComment(dto.getComment());
+		comment.setUpdatedAt(LocalDateTime.now());
 		return comment.getId();
 	}
 

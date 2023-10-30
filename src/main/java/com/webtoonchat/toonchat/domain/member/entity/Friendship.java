@@ -43,12 +43,12 @@ public class Friendship {
 	private Character character;
 
 	@CreatedDate
-	private LocalDateTime regdate;
+	private LocalDateTime createdAt;
 
 	public Friendship(FriendshipId friendshipId, Member member, Character character) {
 		this.id = friendshipId;
 		this.member = member;
 		this.character = character;
-		this.regdate = LocalDateTime.now(ZoneOffset.ofHours(9));
+		this.createdAt = LocalDateTime.now(ZoneOffset.ofHours(9));
 	}
 }

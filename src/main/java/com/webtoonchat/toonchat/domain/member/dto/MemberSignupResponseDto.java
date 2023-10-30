@@ -10,7 +10,7 @@ public class MemberSignupResponseDto {
 	private Long memberId;
 	private String email;
 	private String name;
-	private LocalDateTime regdate;
+	private LocalDateTime createdAt;
 	private String profileUrl;
 	private String provider;
 	/**
