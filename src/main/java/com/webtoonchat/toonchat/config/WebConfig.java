@@ -31,7 +31,8 @@ public class WebConfig implements WebMvcConfigurer {
 	public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/**")
 				.allowedOrigins("http://localhost:8080", "https://webtoonchat.com",
-						"http://localhost:3000", "https://www.webtoonchat.com", "https://dev.webtoonchat.com")
+						"http://localhost:3000", "https://www.webtoonchat.com", "https://dev.webtoonchat.com",
+						"https://develop.webtoonchat.com")
 				.allowedMethods("GET", "POST", "PATCH", "PUT", "OPTIONS", "DELETE")
 				.allowCredentials(true);
 	}
