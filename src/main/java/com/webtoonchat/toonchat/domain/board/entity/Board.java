@@ -22,10 +22,11 @@ import jakarta.persistence.OrderBy;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
+import lombok.Setter;
 
 @EntityListeners(AuditingEntityListener.class)
 @Getter
+@Setter
 @NoArgsConstructor
 @Entity
 public class Board {
@@ -60,6 +61,8 @@ public class Board {
 	@OneToMany(mappedBy = "board", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 	@OrderBy("id asc") // 댓글 정렬
 	private List<Comment> comments;
+
+	private Long likeCount = 0L;
 
 	@Builder // 빌더 패턴으로 객체 생성
 	public Board(
