@@ -32,6 +32,7 @@ public class CommentService {
 				new IllegalArgumentException("댓글 쓰기 실패: 해당 유저가 존재하지 않습니다." + userId));
 		Board board = boardRepository.findById(articleId).orElseThrow(() ->
 				new IllegalArgumentException("댓글 쓰기 실패: 해당 게시글이 존재하지 않습니다." + articleId));
+		board.setCommentCount(board.getCommentCount() + 1);
 		dto.setMember(member);
 		dto.setBoard(board);
 		Comment comment = dto.toEntity();
@@ -55,9 +56,12 @@ public class CommentService {
 	}
 
 	@Transactional
-	public void deleteComment(Long commentId) {
+	public void deleteComment(Long articleId, Long commentId) {
 		Comment comment = commentRepository.findById(commentId).orElseThrow(() ->
 				new IllegalArgumentException("댓글 삭제 실패: 해당 댓글이 존재하지 않습니다." + commentId));
+		Board board = boardRepository.findById(articleId).orElseThrow(() ->
+				new IllegalArgumentException("댓글 삭제 실패: 해당 게시글이 존재하지 않습니다." + articleId));
+		board.setCommentCount(board.getCommentCount() - 1);
 		commentRepository.delete(comment);
 	}
 

@@ -58,11 +58,14 @@ public class Board {
 	@Column(name = "updated_at")
 	private LocalDateTime updatedAt;
 
-	@OneToMany(mappedBy = "board", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@OrderBy("id asc") // 댓글 정렬
 	private List<Comment> comments;
 
 	private Long likeCount = 0L;
+	private Long commentCount = 0L;
+
+
 
 	@Builder // 빌더 패턴으로 객체 생성
 	public Board(

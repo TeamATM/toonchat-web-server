@@ -49,7 +49,7 @@ public class CommentApiController {
 		return ResponseEntity.ok(comments);
 	}
 
-	@PutMapping("/comments/{commentId}")
+	@PutMapping("/boards/{characterId}/{articleId}/comments/{commentId}")
 	public ResponseEntity<Long> updateComment(
 			@PathVariable Long commentId, @RequestBody CommentUpdateDto dto, @Login Claims claims) {
 		Long userId = claims.get("userId", Long.class);
@@ -62,15 +62,16 @@ public class CommentApiController {
 		return ResponseEntity.ok(updatedCommentId);
 	}
 
-	@DeleteMapping("/comments/{commentId}")
-	public ResponseEntity<Void> deleteComment(@PathVariable Long commentId, @Login Claims claims) {
+	@DeleteMapping("/boards/{characterId}/{articleId}/comments/{commentId}")
+	public ResponseEntity<Void> deleteComment(
+			@PathVariable Long commentId, @PathVariable Long articleId, @Login Claims claims) {
 		Long userId = claims.get("userId", Long.class);
 		if (!commentService.findById(commentId).getMember().getId().equals(userId)) {
 			log.error("댓글 작성자가 아닌 댓글 삭제 요청");
 			return ResponseEntity.badRequest()
 					.build();
 		}
-		commentService.deleteComment(commentId);
+		commentService.deleteComment(articleId, commentId);
 		return ResponseEntity.noContent().build();
 	}
 }
