@@ -2,6 +2,7 @@ package com.webtoonchat.toonchat.config.swagger;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
@@ -15,6 +16,7 @@ import io.swagger.v3.oas.models.security.SecurityRequirement;
 	type = SecuritySchemeType.HTTP, scheme = "bearer", bearerFormat = "JWT",
 	in = SecuritySchemeIn.HEADER, name = "Authorization"
 )
+@Profile("!prod")
 @Configuration
 public class SwaggerConfig {
 	@Bean
