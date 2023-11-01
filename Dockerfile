@@ -1,9 +1,7 @@
 FROM amazoncorretto:17
 
-RUN curl -o /dd-java-agent.jar 'https://dtdg.co/latest-java-tracer'
+RUN curl -Lo dd-java-agent.jar https://dtdg.co/latest-java-tracer
 
-ARG jarFile=./build/libs/*.jar
-
-COPY $jarFile app.jar
+COPY ./build/libs/*.jar app.jar
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
