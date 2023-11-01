@@ -21,6 +21,8 @@ public class BoardResponse {
 	private final LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 	private List<CommentResponseDto> comments;
+	private Long likeCount;
+	private Long commentCount;
 
 	public BoardResponse(Board article) {
 		this.id = article.getId();
@@ -32,5 +34,7 @@ public class BoardResponse {
 		this.characterId = article.getCharacterId();
 		this.updatedAt = article.getUpdatedAt();
 		this.comments = article.getComments().stream().map(CommentResponseDto::new).collect(Collectors.toList());
+		this.likeCount = article.getLikeCount();
+		this.commentCount = article.getCommentCount();
 	}
 }
