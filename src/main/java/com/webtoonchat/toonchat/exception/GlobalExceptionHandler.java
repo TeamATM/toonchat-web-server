@@ -65,6 +65,7 @@ public class GlobalExceptionHandler {
 		Locale locale) {
 
 		logError(request, ex.getMessage(), ex);
+		log.error("Unhandled error", ex);
 
 		String errorMessage = messageSource.getMessage("exception", null, "예기치 못한 오류", locale);
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessageDto(errorMessage));
