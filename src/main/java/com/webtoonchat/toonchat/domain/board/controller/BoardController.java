@@ -30,11 +30,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-public class BoardApiController {
+public class BoardController {
 	private final BoardService boardService;
 	private final MemberService memberService;
 	@Operation(description = "특정 캐릭터 게시판 게시글 작성")
-	@PostMapping("/api/boards/{characterId}")
+	@PostMapping("/boards/{characterId}")
 	public ResponseEntity<Board> addBoard(@PathVariable Long characterId,
 		@RequestBody AddBoardRequest request,
 		@Login Claims claims) {
@@ -46,7 +46,7 @@ public class BoardApiController {
 	}
 
 	@Operation(description = "특정 캐릭터 게시판 모든 게시글 조회")
-	@GetMapping("/api/boards/{characterId}")
+	@GetMapping("/boards/{characterId}")
 	public ResponseEntity<List<BoardResponse>> findAllBoards(@PathVariable Long characterId) {
 		List<BoardResponse> articles = boardService.findAllByCharacterId(characterId)
 				.stream()
@@ -58,42 +58,42 @@ public class BoardApiController {
 	}
 
 	@Operation(description = "특정 캐릭터 게시판 특정 게시글 조회")
-	@GetMapping("/api/boards/{characterId}/{id}")
-	public ResponseEntity<BoardResponse> findBoard(@PathVariable long id) {
-		Board article = boardService.findById(id);
+	@GetMapping("/boards/{characterId}/{postId}")
+	public ResponseEntity<BoardResponse> findBoard(@PathVariable long postId) {
+		Board article = boardService.findById(postId);
 
 		return ResponseEntity.ok()
 				.body(new BoardResponse(article));
 	}
 
 	@Operation(description = "특정 캐릭터 게시판 특정 게시글 삭제")
-	@DeleteMapping("/api/boards/{characterId}/{id}")
-	public ResponseEntity<Void> deleteBoard(@PathVariable long id, @Login Claims claims) {
+	@DeleteMapping("/boards/{characterId}/{postId}")
+	public ResponseEntity<Void> deleteBoard(@PathVariable long postId, @Login Claims claims) {
 		Long userId = claims.get("userId", Long.class);
-		if (!boardService.findById(id).getWriterId().equals(userId)) {
+		if (!boardService.findById(postId).getWriterId().equals(userId)) {
 			log.error("작성자가 아닌 글 삭제 요청");
 			return ResponseEntity.badRequest()
 					.build();
 		}
-		boardService.delete(id);
+		boardService.delete(postId);
 		return ResponseEntity.ok()
 				.build();
 	}
 
 	@Operation(description = "특정 캐릭터 게시판 특정 게시글 수정")
-	@PutMapping("/api/boards/{characterId}/{id}")
+	@PutMapping("/boards/{characterId}/{postId}")
 	public ResponseEntity<Board> updateBoard(
-		@PathVariable long id,
+		@PathVariable long postId,
 		@RequestBody UpdateBoardRequest request,
 		@Login Claims claims
 	) {
 		Long userId = claims.get("userId", Long.class);
-		if (!boardService.findById(id).getWriterId().equals(userId)) {
+		if (!boardService.findById(postId).getWriterId().equals(userId)) {
 			log.error("작성자가 아닌 글 수정 요청");
 			return ResponseEntity.badRequest()
 					.build();
 		}
-		Board updateArticle = boardService.update(id, request);
+		Board updateArticle = boardService.update(postId, request);
 
 		return ResponseEntity.ok()
 				.body(updateArticle);

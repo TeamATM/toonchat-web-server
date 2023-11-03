@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/friends")
+@RequestMapping("/friends")
 public class FriendshipController {
 
 	private final FriendshipService friendshipService;
