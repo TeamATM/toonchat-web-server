@@ -36,7 +36,7 @@ public class BoardService {
 
 
 	public List<Board> findAllByCharacterId(Long characterId) {
-		return boardRepository.findAllByCharacterId(characterId);
+		return boardRepository.findAllByCharacterIdOrderByIdDesc(characterId);
 	}
 
 
