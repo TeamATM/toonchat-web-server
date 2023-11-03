@@ -41,8 +41,8 @@ public class CommentController {
 	}
 
 	@GetMapping("/{postId}")
-	public ResponseEntity<List<CommentResponseDto>> getComments(@PathVariable Long articleId) {
-		List<CommentResponseDto> comments = commentService.getCommentsByArticleId(articleId)
+	public ResponseEntity<List<CommentResponseDto>> getComments(@PathVariable Long postId) {
+		List<CommentResponseDto> comments = commentService.getCommentsByArticleId(postId)
 				.stream()
 				.map(CommentResponseDto::new)
 				.toList();;
