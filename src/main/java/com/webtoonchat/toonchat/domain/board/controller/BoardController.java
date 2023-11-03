@@ -35,14 +35,14 @@ public class BoardController {
 	private final MemberService memberService;
 	@Operation(description = "특정 캐릭터 게시판 게시글 작성")
 	@PostMapping("/boards/{characterId}")
-	public ResponseEntity<Board> addBoard(@PathVariable Long characterId,
+	public ResponseEntity<BoardResponse> addBoard(@PathVariable Long characterId,
 		@RequestBody AddBoardRequest request,
 		@Login Claims claims) {
 		Long userId = claims.get("userId", Long.class);
 		Member member = memberService.findByMemberId(userId);
 		Board savedArticle = boardService.save(request, characterId, member.getName(), userId);
 		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(savedArticle);
+				.body(new BoardResponse(savedArticle));
 	}
 
 	@Operation(description = "특정 캐릭터 게시판 모든 게시글 조회")
@@ -82,7 +82,7 @@ public class BoardController {
 
 	@Operation(description = "특정 캐릭터 게시판 특정 게시글 수정")
 	@PutMapping("/boards/{characterId}/{postId}")
-	public ResponseEntity<Board> updateBoard(
+	public ResponseEntity<BoardResponse> updateBoard(
 		@PathVariable long postId,
 		@RequestBody UpdateBoardRequest request,
 		@Login Claims claims
@@ -96,6 +96,6 @@ public class BoardController {
 		Board updateArticle = boardService.update(postId, request);
 
 		return ResponseEntity.ok()
-				.body(updateArticle);
+				.body(new BoardResponse(updateArticle));
 	}
 }

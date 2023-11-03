@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import com.webtoonchat.toonchat.domain.board.entity.Board;
 import com.webtoonchat.toonchat.domain.comment.dto.CommentResponseDto;
+import com.webtoonchat.toonchat.domain.comment.entity.Comment;
 
 import lombok.Getter;
 
@@ -33,7 +34,10 @@ public class BoardResponse {
 		this.createdAt = article.getCreatedAt();
 		this.characterId = article.getCharacterId();
 		this.updatedAt = article.getUpdatedAt();
-		this.comments = article.getComments().stream().map(CommentResponseDto::new).collect(Collectors.toList());
+		List<Comment>  commentList = article.getComments();
+		if (commentList != null) {
+			this.comments = commentList.stream().map(CommentResponseDto::new).collect(Collectors.toList());
+		}
 		this.likeCount = article.getLikeCount();
 		this.commentCount = article.getCommentCount();
 	}
