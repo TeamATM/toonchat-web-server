@@ -186,7 +186,7 @@ public class MemberController {
 	3. AccessToken을 발급하여 기존 RefreshToken과 함께 응답한다.
 	 */
 	@Operation(description = "access token 재발급")
-	@PostMapping("/refreshToken")
+	@PostMapping("/refreshtoken")
 	public ResponseEntity<MemberLoginResponseDto> requestRefresh(@RequestBody RefreshTokenDto refreshTokenDto) {
 		RefreshToken refreshToken = refreshTokenService.findRefreshToken(
 				refreshTokenDto.getRefreshToken()).orElseThrow(() ->
