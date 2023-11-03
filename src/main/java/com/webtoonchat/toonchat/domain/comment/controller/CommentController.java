@@ -27,20 +27,20 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/comments")
 @RestController
-public class CommentApiController {
+public class CommentController {
 	private final CommentService commentService;
 	private final MemberService memberService;
 
-	@PostMapping("/boards/{characterId}/{articleId}/comments")
+	@PostMapping("/{postId}")
 	public ResponseEntity commentSave(
-			@PathVariable Long articleId, @RequestBody CommentRequestDto dto, @Login Claims claims) {
+			@PathVariable Long postId, @RequestBody CommentRequestDto dto, @Login Claims claims) {
 		Long userId = claims.get("userId", Long.class);
-		return ResponseEntity.ok(commentService.commentSave(userId, articleId, dto));
+		return ResponseEntity.ok(commentService.commentSave(userId, postId, dto));
 	}
 
-	@GetMapping("/boards/{characterId}/{articleId}/comments")
+	@GetMapping("/{postId}")
 	public ResponseEntity<List<CommentResponseDto>> getComments(@PathVariable Long articleId) {
 		List<CommentResponseDto> comments = commentService.getCommentsByArticleId(articleId)
 				.stream()
@@ -49,7 +49,7 @@ public class CommentApiController {
 		return ResponseEntity.ok(comments);
 	}
 
-	@PutMapping("/boards/{characterId}/{articleId}/comments/{commentId}")
+	@PutMapping("/{postId}/{commentId}")
 	public ResponseEntity<Long> updateComment(
 			@PathVariable Long commentId, @RequestBody CommentUpdateDto dto, @Login Claims claims) {
 		Long userId = claims.get("userId", Long.class);
@@ -62,16 +62,16 @@ public class CommentApiController {
 		return ResponseEntity.ok(updatedCommentId);
 	}
 
-	@DeleteMapping("/boards/{characterId}/{articleId}/comments/{commentId}")
+	@DeleteMapping("/{postId}/{commentId}")
 	public ResponseEntity<Void> deleteComment(
-			@PathVariable Long commentId, @PathVariable Long articleId, @Login Claims claims) {
+			@PathVariable Long commentId, @PathVariable Long postId, @Login Claims claims) {
 		Long userId = claims.get("userId", Long.class);
 		if (!commentService.findById(commentId).getMember().getId().equals(userId)) {
 			log.error("댓글 작성자가 아닌 댓글 삭제 요청");
 			return ResponseEntity.badRequest()
 					.build();
 		}
-		commentService.deleteComment(articleId, commentId);
+		commentService.deleteComment(postId, commentId);
 		return ResponseEntity.noContent().build();
 	}
 }

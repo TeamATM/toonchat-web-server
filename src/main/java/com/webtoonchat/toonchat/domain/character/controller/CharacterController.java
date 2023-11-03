@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/characters")
+@RequestMapping("/characters")
 public class CharacterController {
 
 	private final CharacterService characterService;
