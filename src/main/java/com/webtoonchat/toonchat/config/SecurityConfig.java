@@ -42,12 +42,8 @@ public class SecurityConfig {
 				.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
 				.requestMatchers("/api/boards/**").authenticated()
 				.requestMatchers("/members/social-login", "/members/signup",
-						"/members/login", "/members/refreshToken").permitAll()
+						"/members/login", "/members/refreshToken").hasRole("ADMIN")
 				.requestMatchers("/swagger/**", "/v3/api-docs/**", "/health").permitAll()
-				.requestMatchers(HttpMethod.GET, "/**").hasAnyRole("USER", "ADMIN")
-				.requestMatchers(HttpMethod.POST, "/**").hasAnyRole("USER", "ADMIN")
-				.requestMatchers(HttpMethod.DELETE, "/**").hasAnyRole("USER", "ADMIN")
-				.requestMatchers(HttpMethod.PUT, "/**").hasAnyRole("USER", "ADMIN")
 				.anyRequest().hasAnyRole("USER", "ADMIN")
 				.and()
 				.exceptionHandling()
