@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.webtoonchat.toonchat.domain.member.dto.MemberLoginDto;
 import com.webtoonchat.toonchat.domain.member.dto.MemberLoginResponseDto;
+import com.webtoonchat.toonchat.domain.member.dto.MemberLogoutRequestDto;
 import com.webtoonchat.toonchat.domain.member.dto.MemberSignupDto;
 import com.webtoonchat.toonchat.domain.member.dto.MemberSignupResponseDto;
 import com.webtoonchat.toonchat.domain.member.entity.Member;
@@ -168,13 +169,14 @@ public class MemberController {
 
 	@Operation(description = "로그아웃")
 	@PostMapping("/logout")
-	public ResponseEntity logout(HttpServletRequest request, @Login Claims claims) {
+	public ResponseEntity logout(@RequestBody @Validated MemberLogoutRequestDto logoutDto, @Login Claims claims) {
 		/**
 		 * TODO: Redis에 accessToken blacklist 등록하기 + ttl설정(유효기간까지), filter단에서 인가하기 전에 blacklist 등록되어있는지 확인
 		 */
 		Long userId = claims.get("userId", Long.class);
-		Long ttl  = claims.getExpiration().getTime() - System.currentTimeMillis();
-		String accessToken = request.getHeader("Authorization").split(" ")[1];
+		String accessToken = logoutDto.getToken();
+		Claims accessTokenClaims = jwtTokenizer.parseAccessToken(accessToken);
+		Long ttl  = accessTokenClaims.getExpiration().getTime() - System.currentTimeMillis();
 		redisUtil.setBlackList(accessToken, "access_token", ttl);
 		refreshTokenService.deleteRefreshToken(userId);
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
